@@ -23,13 +23,10 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        final TextView tvBattery = (TextView) findViewById(R.id.tvBattery);
-//        if (BatteryManager.checkJSRSupport()) Log.w(TAG, "onCreate: " + "SUPPORT" );
-        tvBattery.setText("BAT1 " +  BatteryManager.getValues(BatteryManager.SYS_BATTERY_CAPACITY) + "%\n"
-                +BatteryManager.getValues(BatteryManager.SYS_BATTERY_STATUS) +
-                "\nBAT2 " +  BatteryManager.getValues(BatteryManager.SYS_BATTERY_CAPACITY_JSR) + "%\n"
-                +BatteryManager.getValues(BatteryManager.SYS_BATTERY_STATUS_JSR));
-        final NotificationCompat.Builder mBuilder =
+        Intent intent = new Intent(this, BatteryManagerService.class);
+        startService(intent);
+
+     /*   final NotificationCompat.Builder mBuilder =
                 (NotificationCompat.Builder) new NotificationCompat.Builder(this)
                         .setSmallIcon(android.R.drawable.ic_menu_zoom)
                         .setContentTitle("Battery")
@@ -78,6 +75,6 @@ public class SettingsActivity extends AppCompatActivity {
 
         };
 
-        myHandler.postDelayed(runnable, 2000);
+        myHandler.postDelayed(runnable, 2000); */
     }
 }
