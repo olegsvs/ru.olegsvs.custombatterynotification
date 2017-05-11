@@ -7,7 +7,7 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 /**
- * Created by user on 11.05.2017.
+ * Created by olegsvs on 11.05.2017.
  */
 
 public class BatteryBroadcastReceiver extends BroadcastReceiver {

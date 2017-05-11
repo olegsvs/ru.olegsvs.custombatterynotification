@@ -5,7 +5,7 @@ import android.util.Log;
 import java.io.File;
 
 /**
- * Created by user on 11.05.2017.
+ * Created by olegsvs on 11.05.2017.
  */
 
 public class BatteryManager {
@@ -46,7 +46,7 @@ public class BatteryManager {
             return "0";
         }
         if ((typeBattery == SYS_BATTERY_CAPACITY || typeBattery == SYS_BATTERY_STATUS) && !checkSTDSupport()) {
-            Log.e(SettingsActivity.TAG, "getValues: " + "ERROR for get values from STD battery paths, IS_JSR_SUPPORT = " + IS_STD_SUPPORT);
+            Log.e(SettingsActivity.TAG, "getValues: " + "ERROR for get values from STD battery paths, IS_STD_SUPPORT = " + IS_STD_SUPPORT);
             return "0";
         }
         File file = new File(typeBattery);
