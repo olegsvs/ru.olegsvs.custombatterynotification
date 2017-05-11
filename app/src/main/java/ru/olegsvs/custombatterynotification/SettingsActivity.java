@@ -8,11 +8,13 @@ import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.app.NotificationCompat;
+import android.util.Log;
 import android.widget.TextView;
 
 import static ru.olegsvs.custombatterynotification.BatteryManager.getValues;
 
 public class SettingsActivity extends AppCompatActivity {
+    public static String TAG = SettingsActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,10 +22,12 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
 
         TextView tvBattery = (TextView) findViewById(R.id.tvBattery);
+        if (BatteryManager.checkJSRSupport()) Log.w(TAG, "onCreate: " + "SUPPORT" );
         tvBattery.setText("BAT1 " +  BatteryManager.getValues(BatteryManager.SYS_BATTERY_CAPACITY) + "%\n"
                 +BatteryManager.getValues(BatteryManager.SYS_BATTERY_STATUS) +
                 "\nBAT2 " +  BatteryManager.getValues(BatteryManager.SYS_BATTERY_CAPACITY_JSR) + "%\n"
                 +BatteryManager.getValues(BatteryManager.SYS_BATTERY_STATUS_JSR));
+        Log.i(SettingsActivity.TAG, "onCreate: " + tvBattery.getText());
     /*    NotificationCompat.Builder mBuilder =
                 (NotificationCompat.Builder) new NotificationCompat.Builder(this)
                         .setSmallIcon(android.R.drawable.ic_menu_zoom)

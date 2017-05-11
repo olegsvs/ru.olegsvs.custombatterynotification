@@ -29,46 +29,26 @@ package ru.olegsvs.custombatterynotification;
 
 public class OneLineReader {
 
-	/*private File _f = null;
-	private boolean _convertToMillis = false;
-
-	public OneLineReader(File f, boolean convertToMillis) {
-		_f = f;
-		_convertToMillis = convertToMillis;
-	}*/
-
     public static String getValue(File _f) {
 
-        String text = null;
+        String readedValue = null;
 
         try {
             FileInputStream fs = new FileInputStream(_f);
             InputStreamReader sr = new InputStreamReader(fs);
             BufferedReader br = new BufferedReader(sr);
 
-            text = br.readLine();
+            readedValue = br.readLine();
 
             br.close();
             sr.close();
             fs.close();
         } catch (Exception ex) {
-            Log.e("CurrentWidget", ex.getMessage());
+            Log.i(SettingsActivity.TAG, "getValue: " + ex.getMessage());
             ex.printStackTrace();
         }
-
-        String value = null;
-
-        if (text != null) {
-            try	{
-                value = text;
-            } catch (NumberFormatException nfe) 	{
-                Log.e("CurrentWidget", nfe.getMessage());
-                value = null;
-            }
-
-        }
-        Log.i("AAAAAAAAAAAAAAAAAa", "getValue: " + value);
-        return value;
+        Log.i(SettingsActivity.TAG, "getValue: " + readedValue);
+        return readedValue;
     }
 
 }
