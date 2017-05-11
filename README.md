@@ -1,4 +1,4 @@
-# Custom Battery Notify
+# Custom Battery Notifi
 Utility for show state of batteries on devices with double batteries (battery + batteryjsr)
 
 ![FIRST](https://raw.githubusercontent.com/olegsvs/ru.olegsvs.custombatterynotification/master/images/1.png)

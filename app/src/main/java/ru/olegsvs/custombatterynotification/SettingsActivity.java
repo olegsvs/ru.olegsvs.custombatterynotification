@@ -1,8 +1,10 @@
 package ru.olegsvs.custombatterynotification;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -31,6 +33,14 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+        if (!BatteryManager.checkSTDSupport() && !BatteryManager.checkJSRSupport()) {
+            Log.e(TAG, "onCreate: Application not supported!");
+            Intent intent = new Intent(this, BatteryManagerService.class);
+            stopService(intent);
+            Log.i(SettingsActivity.TAG, "cnbServiceStatusClick: StopService");
+            notSupportedDialog();
+        }
+
         if (!BatteryManagerService.isMyServiceRunning()) {
             Intent intent = new Intent(this, BatteryManagerService.class);
             startService(intent);
@@ -44,10 +54,10 @@ public class SettingsActivity extends AppCompatActivity {
 
         sharedPref = getSharedPreferences("Settings", Context.MODE_PRIVATE);
 
-        Log.i(SettingsActivity.TAG, "onCreate: loading sharedPrefs " + sharedPref.getInt("batterySelection",0));
-        Log.i(SettingsActivity.TAG, "onCreate: loading sharedPrefs " + sharedPref.getBoolean("serviceRun", false));
-        Log.i(SettingsActivity.TAG, "onCreate: loading sharedPrefs " + sharedPref.getBoolean("serviceAutoStart", false));
-        Log.i(SettingsActivity.TAG, "onCreate: loading sharedPrefs " + sharedPref.getInt("interval", 2));
+        Log.i(SettingsActivity.TAG, "onCreate: loading sharedPrefs batterySelection " + sharedPref.getInt("batterySelection",0));
+        Log.i(SettingsActivity.TAG, "onCreate: loading sharedPrefs serviceRun " + sharedPref.getBoolean("serviceRun", false));
+        Log.i(SettingsActivity.TAG, "onCreate: loading sharedPrefs serviceAutoStart " + sharedPref.getBoolean("serviceAutoStart", false));
+        Log.i(SettingsActivity.TAG, "onCreate: loading sharedPrefs interval " + sharedPref.getInt("interval", 2));
 
         chbAutostartService.setChecked(sharedPref.getBoolean("serviceAutoStart", false));
         chbServiceStatus.setChecked(sharedPref.getBoolean("serviceRun", false));
@@ -77,6 +87,24 @@ public class SettingsActivity extends AppCompatActivity {
             }
             @Override
             public void onNothingSelected(AdapterView<?> arg0) {
+            }
+        });
+    }
+
+    public void notSupportedDialog() {
+        this.runOnUiThread(new Runnable() {
+            public void run() {
+                new AlertDialog.Builder(SettingsActivity.this)
+                        .setTitle("Your Device not supported")
+                        .setMessage(getText(R.string.not_supported))
+                        .setCancelable(false)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // continue with delete
+                                Log.i(SettingsActivity.TAG, "onClick: device_not_supported_exit");
+                                System.exit(0);
+                            }
+                        }).show();
             }
         });
     }

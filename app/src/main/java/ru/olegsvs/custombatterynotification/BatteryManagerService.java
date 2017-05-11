@@ -115,13 +115,18 @@ public class BatteryManagerService extends Service{
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        if (!BatteryManager.checkSTDSupport() && !BatteryManager.checkJSRSupport()) {
+            Log.e(SettingsActivity.TAG, "onStartCommand: serviceRun = false || notSupported!");
+            stopSelf();
+            return super.onStartCommand(intent, flags, startId);
+        }
         SharedPreferences sharedPref = getSharedPreferences("Settings", Context.MODE_PRIVATE);
 
         if(sharedPref.getBoolean("serviceRun", false)) {
             Log.i(SettingsActivity.TAG, "onStartCommand: BatteryManagerService start");
              mNotificationManager =
                     (NotificationManager) getSystemService(Service.NOTIFICATION_SERVICE);
-            interval = sharedPref.getInt("interval", 1000);
+            interval = 1000 * sharedPref.getInt("interval", 2);
             Log.i(SettingsActivity.TAG, "onStartCommand: load interval = " + interval);
             createNotify();
             Log.i(SettingsActivity.TAG, "onStartCommand: create and show notification");

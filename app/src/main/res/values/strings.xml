@@ -7,4 +7,5 @@
     <string name="intervalTV">Interval of scanning battery state, secs</string>
     <string name="intervalBTN">Apply</string>
     <string name="intervalWarning">Set value > 0!</string>
+    <string name="not_supported">Your devise is not supported!\nApplication close.</string>
 </resources>

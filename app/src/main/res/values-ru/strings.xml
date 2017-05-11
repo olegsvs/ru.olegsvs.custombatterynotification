@@ -7,4 +7,5 @@
     <string name="intervalTV">Интервал скана состояния батарей, секунды</string>
     <string name="intervalBTN">Установить</string>
     <string name="intervalWarning">Укажите значение > 0!</string>
+    <string name="not_supported">Ваше устройство не поддерживается!\nПриложение бужет закрыто.</string>
 </resources>
