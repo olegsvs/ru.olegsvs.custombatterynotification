@@ -30,7 +30,7 @@ public class BatteryManager {
     }
 
     static public String getValues(String typeBattery) {
-        if ((typeBattery == SYS_BATTERY_CAPACITY_JSR || typeBattery == SYS_BATTERY_STATUS_JSR) && IS_JSR_SUPPORT == false) {
+        if ((typeBattery == SYS_BATTERY_CAPACITY_JSR || typeBattery == SYS_BATTERY_STATUS_JSR) && !checkJSRSupport()) {
             Log.e(SettingsActivity.TAG, "getValues: " + "ERROR for get values from JSR battery paths, IS_JSR_SUPPORT = " + IS_JSR_SUPPORT);
         }  else {
             File file = new File(typeBattery);
