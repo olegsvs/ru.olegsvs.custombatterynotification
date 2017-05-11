@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Custom Battery Notify</string>
+    <string name="chbEnableService">Показывать батарейку в уведомлениях?</string>
+    <string name="chbAutoStartService">Атозапуск при загрузке Android?</string>
+    <string name="tvBatteries">Выберите батарейку, для показа ее заряда в виде иконки</string>
+    <string name="noSupportedJSR">JSR батарея не поддерживается на вашем устройстве!</string>
+</resources>

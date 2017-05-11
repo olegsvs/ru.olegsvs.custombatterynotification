@@ -44,10 +44,8 @@ public class OneLineReader {
             sr.close();
             fs.close();
         } catch (Exception ex) {
-            Log.i(SettingsActivity.TAG, "getValue: " + ex.getMessage());
             ex.printStackTrace();
         }
-        Log.i(SettingsActivity.TAG, "getValue: " + readedValue);
         return readedValue;
     }
 

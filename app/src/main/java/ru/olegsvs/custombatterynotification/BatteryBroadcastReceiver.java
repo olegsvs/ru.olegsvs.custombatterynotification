@@ -1,9 +1,9 @@
 package ru.olegsvs.custombatterynotification;
 
-import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 /**
@@ -14,9 +14,15 @@ public class BatteryBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         if ("android.intent.action.BOOT_COMPLETED".equals(intent.getAction())) {
-            Intent myIntent = new Intent(context, BatteryManagerService.class);
-            context.startService(myIntent);
-            Log.i(SettingsActivity.TAG, "onReceive: BatteryBroadcastReceiver exec");
+            SharedPreferences sharedPref = context.getSharedPreferences("Settings", Context.MODE_PRIVATE);
+
+            if(sharedPref.getBoolean("serviceAutoStart", false)) {
+                Intent myIntent = new Intent(context, BatteryManagerService.class);
+                context.startService(myIntent);
+                Log.i(SettingsActivity.TAG, "onReceive: BatteryBroadcastReceiver exec");
+            } else {
+                Log.i(SettingsActivity.TAG, "onReceive: autostart = false");
+            }
         }
     }
 }
