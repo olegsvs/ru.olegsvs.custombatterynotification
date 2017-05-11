@@ -21,6 +21,7 @@ public class BatteryManagerService extends Service{
     private final String BAT1 = "BAT1 ";
     private final String BAT2 = "BAT2 ";
     private final int NOTIFICATION_CUSTOM_BATTERY = 444;
+    private static int interval = 2000;
     NotificationManager mNotificationManager = null;
 
     private int iconRes[] = {
@@ -88,7 +89,10 @@ public class BatteryManagerService extends Service{
         return IS_STARTED;
     }
 
-
+    public static void setInterval(int interval) {
+        BatteryManagerService.interval = interval * 1000;
+        Log.i(SettingsActivity.TAG, "setInterval: " + BatteryManagerService.interval);
+    }
     public static void setBatteryForShow(int type) {
         if (type == 0) {
             showBAT2 = false;
@@ -117,6 +121,8 @@ public class BatteryManagerService extends Service{
             Log.i(SettingsActivity.TAG, "onStartCommand: BatteryManagerService start");
              mNotificationManager =
                     (NotificationManager) getSystemService(Service.NOTIFICATION_SERVICE);
+            interval = sharedPref.getInt("interval", 1000);
+            Log.i(SettingsActivity.TAG, "onStartCommand: load interval = " + interval);
             createNotify();
             Log.i(SettingsActivity.TAG, "onStartCommand: create and show notification");
             return super.onStartCommand(intent, flags, startId);
@@ -177,13 +183,13 @@ public class BatteryManagerService extends Service{
                     mBuilder.setContentText(getResults());
                     if (showBAT2) mBuilder.setSmallIcon(iconRes[BAT2_CAPACITY]); else mBuilder.setSmallIcon(iconRes[BAT1_CAPACITY]);
                     mNotificationManager.notify(NOTIFICATION_CUSTOM_BATTERY, mBuilder.build());
-                    myHandler.postDelayed(this, 2000);
+                    myHandler.postDelayed(this, interval);
                 }
             }
 
         };
 
-        myHandler.postDelayed(runnable, 2000);
+        myHandler.postDelayed(runnable, interval);
     }
 
     @Nullable

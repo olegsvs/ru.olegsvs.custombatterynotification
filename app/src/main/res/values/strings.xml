@@ -4,4 +4,7 @@
     <string name="chbAutoStartService">Autostart service at boot?</string>
     <string name="tvBatteries">Select battery for show in StatusBar</string>
     <string name="noSupportedJSR">JSR battery not supported on your device!</string>
+    <string name="intervalTV">Interval of scanning battery state, secs</string>
+    <string name="intervalBTN">Apply</string>
+    <string name="intervalWarning">Set value > 0!</string>
 </resources>

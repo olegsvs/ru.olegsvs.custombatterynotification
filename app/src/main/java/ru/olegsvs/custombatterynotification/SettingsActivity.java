@@ -9,7 +9,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -23,7 +25,8 @@ public class SettingsActivity extends AppCompatActivity {
     public CheckBox chbServiceStatus;
     public CheckBox chbAutostartService;
     public SharedPreferences sharedPref;
-
+    public Button intervalSetBTN;
+    public EditText intervalET;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,15 +39,19 @@ public class SettingsActivity extends AppCompatActivity {
         chbServiceStatus = (CheckBox) findViewById(R.id.chbServiceStatus);
         chbAutostartService = (CheckBox) findViewById(R.id.chbServiceAutoStart);
         spinnerBatteries = (Spinner) findViewById(R.id.spinnerBatteries);
+        intervalSetBTN = (Button) findViewById(R.id.intervalSetBTN);
+        intervalET = (EditText) findViewById(R.id.intervalET);
 
         sharedPref = getSharedPreferences("Settings", Context.MODE_PRIVATE);
 
         Log.i(SettingsActivity.TAG, "onCreate: loading sharedPrefs " + sharedPref.getInt("batterySelection",0));
         Log.i(SettingsActivity.TAG, "onCreate: loading sharedPrefs " + sharedPref.getBoolean("serviceRun", false));
         Log.i(SettingsActivity.TAG, "onCreate: loading sharedPrefs " + sharedPref.getBoolean("serviceAutoStart", false));
+        Log.i(SettingsActivity.TAG, "onCreate: loading sharedPrefs " + sharedPref.getInt("interval", 2));
 
         chbAutostartService.setChecked(sharedPref.getBoolean("serviceAutoStart", false));
         chbServiceStatus.setChecked(sharedPref.getBoolean("serviceRun", false));
+        intervalET.setText(String.valueOf(sharedPref.getInt("interval", 2)));
 
         ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this,   android.R.layout.simple_spinner_item, batteries);
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // The drop down view
@@ -72,6 +79,17 @@ public class SettingsActivity extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> arg0) {
             }
         });
+    }
+
+    public void intervalClick(View v) {
+        if(intervalET.getText().toString().equals("0") == false) {
+            Log.i(SettingsActivity.TAG, "intervalClick: setting interval " + intervalET.getText().toString());
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putInt("interval" , Integer.parseInt(intervalET.getText().toString()));
+            editor.apply();
+            editor.commit();
+            BatteryManagerService.setInterval(Integer.parseInt(intervalET.getText().toString()));
+        } else Toast.makeText(getApplicationContext(),getString(R.string.intervalWarning),Toast.LENGTH_LONG).show();
     }
 
     public void cnbAutoStartClick(View v) {
