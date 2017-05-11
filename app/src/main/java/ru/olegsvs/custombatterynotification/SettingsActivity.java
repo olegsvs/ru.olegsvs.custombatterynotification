@@ -8,6 +8,9 @@ import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.app.NotificationCompat;
+import android.widget.TextView;
+
+import static ru.olegsvs.custombatterynotification.BatteryManager.getValues;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -16,7 +19,12 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        NotificationCompat.Builder mBuilder =
+        TextView tvBattery = (TextView) findViewById(R.id.tvBattery);
+        tvBattery.setText("BAT1 " +  BatteryManager.getValues(BatteryManager.SYS_BATTERY_CAPACITY) + "%\n"
+                +BatteryManager.getValues(BatteryManager.SYS_BATTERY_STATUS) +
+                "\nBAT2 " +  BatteryManager.getValues(BatteryManager.SYS_BATTERY_CAPACITY_JSR) + "%\n"
+                +BatteryManager.getValues(BatteryManager.SYS_BATTERY_STATUS_JSR));
+    /*    NotificationCompat.Builder mBuilder =
                 (NotificationCompat.Builder) new NotificationCompat.Builder(this)
                         .setSmallIcon(android.R.drawable.ic_menu_zoom)
                         .setContentTitle("Battery")
@@ -42,6 +50,6 @@ public class SettingsActivity extends AppCompatActivity {
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 // mId allows you to update the notification later on.
-        mNotificationManager.notify(444, mBuilder.build());
+        mNotificationManager.notify(444, mBuilder.build()); */
     }
 }
