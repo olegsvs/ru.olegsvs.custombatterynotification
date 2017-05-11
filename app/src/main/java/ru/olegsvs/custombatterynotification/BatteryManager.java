@@ -12,6 +12,6 @@ public class BatteryManager {
     public boolean IS_JSR_SUPPORT = false;
 
     BatteryManager() {
-        
+
     }
 }
