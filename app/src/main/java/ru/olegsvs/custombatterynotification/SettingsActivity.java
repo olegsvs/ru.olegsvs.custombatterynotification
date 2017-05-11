@@ -4,6 +4,8 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.StrictMode;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,18 +23,17 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        TextView tvBattery = (TextView) findViewById(R.id.tvBattery);
+        final TextView tvBattery = (TextView) findViewById(R.id.tvBattery);
 //        if (BatteryManager.checkJSRSupport()) Log.w(TAG, "onCreate: " + "SUPPORT" );
         tvBattery.setText("BAT1 " +  BatteryManager.getValues(BatteryManager.SYS_BATTERY_CAPACITY) + "%\n"
                 +BatteryManager.getValues(BatteryManager.SYS_BATTERY_STATUS) +
                 "\nBAT2 " +  BatteryManager.getValues(BatteryManager.SYS_BATTERY_CAPACITY_JSR) + "%\n"
                 +BatteryManager.getValues(BatteryManager.SYS_BATTERY_STATUS_JSR));
-        Log.i(SettingsActivity.TAG, "onCreate: " + tvBattery.getText());
-    /*    NotificationCompat.Builder mBuilder =
+        final NotificationCompat.Builder mBuilder =
                 (NotificationCompat.Builder) new NotificationCompat.Builder(this)
                         .setSmallIcon(android.R.drawable.ic_menu_zoom)
                         .setContentTitle("Battery")
-                        .setContentText("BAT1: null\nBAT2: null");
+                        .setContentText(tvBattery.getText().toString());
 // Creates an explicit intent for an Activity in your app
         Intent resultIntent = new Intent(this, SettingsActivity.class);
 
@@ -51,9 +52,32 @@ public class SettingsActivity extends AppCompatActivity {
                         PendingIntent.FLAG_UPDATE_CURRENT
                 );
         mBuilder.setContentIntent(resultPendingIntent);
-        NotificationManager mNotificationManager =
+        final NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 // mId allows you to update the notification later on.
-        mNotificationManager.notify(444, mBuilder.build()); */
+        mNotificationManager.notify(444, mBuilder.build());
+
+        final Handler myHandler;
+        myHandler = new Handler();
+        Runnable runnable = new Runnable(){
+
+            @Override
+            public void run() {
+
+                if(true) {
+                    tvBattery.setText("BAT1 " + BatteryManager.getValues(BatteryManager.SYS_BATTERY_CAPACITY) + "%\n"
+                            + BatteryManager.getValues(BatteryManager.SYS_BATTERY_STATUS) +
+                            "\nBAT2 " + BatteryManager.getValues(BatteryManager.SYS_BATTERY_CAPACITY_JSR) + "%\n"
+                            + BatteryManager.getValues(BatteryManager.SYS_BATTERY_STATUS_JSR));
+                    Log.i(SettingsActivity.TAG, "onCreate: " + tvBattery.getText());
+                    mBuilder.setContentText(tvBattery.getText());
+                    mNotificationManager.notify(444, mBuilder.build());
+                    myHandler.postDelayed(this, 2000);
+                }
+            }
+
+        };
+
+        myHandler.postDelayed(runnable, 2000);
     }
 }
