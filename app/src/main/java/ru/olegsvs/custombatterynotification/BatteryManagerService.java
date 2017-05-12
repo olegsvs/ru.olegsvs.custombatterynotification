@@ -115,7 +115,7 @@ public class BatteryManagerService extends Service{
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (!BatteryManager.checkSTDSupport() && !BatteryManager.checkJSRSupport()) {
+        if (!BatteryManager.isSTDSupportCheck() && !BatteryManager.isJSRSupportCheck()) {
             Log.e(SettingsActivity.TAG, "onStartCommand: serviceRun = false || notSupported!");
             stopSelf();
             return super.onStartCommand(intent, flags, startId);
@@ -139,7 +139,7 @@ public class BatteryManagerService extends Service{
     }
 
     private String getResults() {
-        if (!BatteryManager.checkJSRSupport()) {
+        if (!BatteryManager.isJSRSupportCheck()) {
             BAT1_CAPACITY = Integer.parseInt(BatteryManager.getValues(BatteryManager.SYS_BATTERY_CAPACITY));
             return (BAT1 + BAT1_CAPACITY + "% "
                          + BatteryManager.getValues(BatteryManager.SYS_BATTERY_STATUS) + " ");

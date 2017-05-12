@@ -20,32 +20,32 @@ public class BatteryManager {
 
     }
 
-    static public boolean checkJSRSupport() {
+    static public boolean isJSRSupportCheck() {
         File file = new File(SYS_BATTERY_CAPACITY_JSR);
         if (file.exists()) {
-            Log.w(SettingsActivity.TAG, "checkJSRSupport:  " + SYS_BATTERY_CAPACITY_JSR + " exists!");
+            Log.w(SettingsActivity.TAG, "isJSRSupportCheck:  " + SYS_BATTERY_CAPACITY_JSR + " exists!");
             return IS_JSR_SUPPORT = true;
         }
-        Log.w(SettingsActivity.TAG, "checkJSRSupport:  " + SYS_BATTERY_CAPACITY_JSR + " NOT exists!");
+        Log.w(SettingsActivity.TAG, "isJSRSupportCheck:  " + SYS_BATTERY_CAPACITY_JSR + " NOT exists!");
         return IS_JSR_SUPPORT = false;
     }
 
-    static public boolean checkSTDSupport() {
+    static public boolean isSTDSupportCheck() {
         File file = new File(SYS_BATTERY_CAPACITY);
         if (file.exists()) {
-            Log.w(SettingsActivity.TAG, "checkSTDSupport:  " + SYS_BATTERY_CAPACITY + " exists!");
+            Log.w(SettingsActivity.TAG, "isSTDSupportCheck:  " + SYS_BATTERY_CAPACITY + " exists!");
             return IS_STD_SUPPORT = true;
         }
-        Log.w(SettingsActivity.TAG, "checkSTDSupport:  " + SYS_BATTERY_CAPACITY + " NOT exists!");
+        Log.w(SettingsActivity.TAG, "isSTDSupportCheck:  " + SYS_BATTERY_CAPACITY + " NOT exists!");
         return IS_STD_SUPPORT = false;
     }
 
     static public String getValues(String typeBattery) {
-        if ((typeBattery == SYS_BATTERY_CAPACITY_JSR || typeBattery == SYS_BATTERY_STATUS_JSR) && !checkJSRSupport()) {
+        if ((typeBattery == SYS_BATTERY_CAPACITY_JSR || typeBattery == SYS_BATTERY_STATUS_JSR) && !isJSRSupportCheck()) {
             Log.e(SettingsActivity.TAG, "getValues: " + "ERROR for get values from JSR battery paths, IS_JSR_SUPPORT = " + IS_JSR_SUPPORT);
             return "0";
         }
-        if ((typeBattery == SYS_BATTERY_CAPACITY || typeBattery == SYS_BATTERY_STATUS) && !checkSTDSupport()) {
+        if ((typeBattery == SYS_BATTERY_CAPACITY || typeBattery == SYS_BATTERY_STATUS) && !isSTDSupportCheck()) {
             Log.e(SettingsActivity.TAG, "getValues: " + "ERROR for get values from STD battery paths, IS_STD_SUPPORT = " + IS_STD_SUPPORT);
             return "0";
         }

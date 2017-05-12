@@ -17,8 +17,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import static ru.olegsvs.custombatterynotification.BatteryManager.getValues;
-
 public class SettingsActivity extends AppCompatActivity {
     public static String TAG = SettingsActivity.class.getSimpleName();
     private final String batteries[] = {"BAT1" , "BAT2"};
@@ -33,7 +31,7 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        if (!BatteryManager.checkSTDSupport() && !BatteryManager.checkJSRSupport()) {
+        if (!BatteryManager.isSTDSupportCheck() && !BatteryManager.isJSRSupportCheck()) {
             Log.e(TAG, "onCreate: Application not supported!");
             Intent intent = new Intent(this, BatteryManagerService.class);
             stopService(intent);
@@ -74,7 +72,7 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
-                if ((position == 1) && (!BatteryManager.checkJSRSupport())) {
+                if ((position == 1) && (!BatteryManager.isJSRSupportCheck())) {
                     Toast.makeText(getApplicationContext(), getString(R.string.noSupportedJSR), Toast.LENGTH_LONG).show();
                     spinnerBatteries.setSelection(0);
                 }
