@@ -1,5 +1,5 @@
 # Custom Battery Notify
-Utility for show state of batteries on devices with double batteries (battery + batteryjsr)
+Utility for show state of batteries on devices with double batteries (battery + batteryjsr) (Innos D6000)
 
 Change this in https://github.com/olegsvs/ru.olegsvs.custombatterynotification/blob/master/app/src/main/java/ru/olegsvs/custombatterynotification/BatteryManager.java
 ```java
