@@ -105,6 +105,7 @@ public class BatteryManagerService extends Service{
             mNotificationManager = (NotificationManager)  getSystemService(NOTIFICATION_SERVICE);
         mNotificationManager.cancelAll();
         mBatteryManager = null;
+        if(myHandler != null)
         myHandler.removeCallbacks(runnable);
         Log.i(SettingsActivity.TAG, "BatteryManagerService onDestroy: BatteryManagerService destroy!");
     }
@@ -163,46 +164,51 @@ public class BatteryManagerService extends Service{
     }
 
     private void createNotify() {
-        int color = 0xff123456;
-        mBuilder =
-                new NotificationCompat.Builder(this)
-                        .setContentTitle("Battery")
-                        .setStyle(new NotificationCompat.BigTextStyle().bigText(getResults()))
-                        .setOngoing(true)
-                        .setColor(color)
-                        .setSmallIcon(iconRes[BAT_CAPACITY])
-                        .setWhen(0)
-                        .setContentText(getResults());
-        Intent resultIntent = new Intent(this, SettingsActivity.class);
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-        stackBuilder.addParentStack(SettingsActivity.class);
-        stackBuilder.addNextIntent(resultIntent);
-        PendingIntent resultPendingIntent =
-                stackBuilder.getPendingIntent(
-                        0,
-                        PendingIntent.FLAG_UPDATE_CURRENT
-                );
-        mBuilder.setContentIntent(resultPendingIntent);
-        mNotificationManager.notify(NOTIFICATION_CUSTOM_BATTERY, mBuilder.build());
+        try {
+            int color = 0xff123456;
+            mBuilder =
+                    new NotificationCompat.Builder(this)
+                            .setContentTitle("Battery")
+                            .setStyle(new NotificationCompat.BigTextStyle().bigText(getResults()))
+                            .setOngoing(true)
+                            .setColor(color)
+                            .setSmallIcon(iconRes[BAT_CAPACITY])
+                            .setWhen(0)
+                            .setContentText(getResults());
+            Intent resultIntent = new Intent(this, SettingsActivity.class);
+            TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+            stackBuilder.addParentStack(SettingsActivity.class);
+            stackBuilder.addNextIntent(resultIntent);
+            PendingIntent resultPendingIntent =
+                    stackBuilder.getPendingIntent(
+                            0,
+                            PendingIntent.FLAG_UPDATE_CURRENT
+                    );
+            mBuilder.setContentIntent(resultPendingIntent);
+            mNotificationManager.notify(NOTIFICATION_CUSTOM_BATTERY, mBuilder.build());
 
-        myHandler = new Handler();
-        Log.i(SettingsActivity.TAG, "handler started");
-        Log.i(SettingsActivity.TAG, "state : " + getResults());
-        runnable = new Runnable(){
+            myHandler = new Handler();
+            Log.i(SettingsActivity.TAG, "handler started");
+            Log.i(SettingsActivity.TAG, "state : " + getResults());
+            runnable = new Runnable(){
 
-            @Override
-            public void run() {
-                if(IS_STARTED) {
-                    mBuilder.setContentText(getResults());
-                    mBuilder.setSmallIcon(iconRes[BAT_CAPACITY]);
-                    mNotificationManager.notify(NOTIFICATION_CUSTOM_BATTERY, mBuilder.build());
-                    myHandler.postDelayed(runnable, interval);
+                @Override
+                public void run() {
+                    if(IS_STARTED) {
+                        mBuilder.setContentText(getResults());
+                        mBuilder.setSmallIcon(iconRes[BAT_CAPACITY]);
+                        mNotificationManager.notify(NOTIFICATION_CUSTOM_BATTERY, mBuilder.build());
+                        myHandler.postDelayed(runnable, interval);
+                    }
                 }
-            }
 
-        };
+            };
 
-        myHandler.postDelayed(runnable, interval);
+            myHandler.postDelayed(runnable, interval);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this,e.toString(),Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override

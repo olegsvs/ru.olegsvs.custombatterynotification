@@ -118,21 +118,26 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
     public void showNotifyClick(View v){
-        mBatteryManager = null;
-        Intent intent = new Intent(getApplicationContext(), BatteryManagerService.class);
-        stopService(intent);
-
-        mBatteryManager = new BatteryManager(capacityFiles.getSelectedItem().toString(),statusFiles.getSelectedItem().toString() );
-        if (mBatteryManager.isSupport) {
-            Log.i(SettingsActivity.TAG, "onCreate: isSupported");
-            intent.putExtra("BatteryManager", mBatteryManager);
+        try {
             mBatteryManager = null;
-            saveSpinners();
-            if(BatteryManagerService.isMyServiceRunning()) {
-                stopService(intent);
-                startService(intent);
-            } else startService(intent);
-        } else {mBatteryManager = null; }
+            Intent intent = new Intent(getApplicationContext(), BatteryManagerService.class);
+            stopService(intent);
+
+            mBatteryManager = new BatteryManager(capacityFiles.getSelectedItem().toString(),statusFiles.getSelectedItem().toString() );
+            if (mBatteryManager.isSupport) {
+                Log.i(SettingsActivity.TAG, "onCreate: isSupported");
+                intent.putExtra("BatteryManager", mBatteryManager);
+                mBatteryManager = null;
+                saveSpinners();
+                if(BatteryManagerService.isMyServiceRunning()) {
+                    stopService(intent);
+                    startService(intent);
+                } else startService(intent);
+            } else {mBatteryManager = null; }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this,e.toString(),Toast.LENGTH_LONG).show();
+        }
     }
 
     public void saveSpinners() {
