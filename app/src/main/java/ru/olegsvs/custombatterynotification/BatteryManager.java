@@ -16,21 +16,27 @@ public class BatteryManager implements Parcelable {
     public static final String SYS_BATTERY_CAPACITY_JSR = "/sys/class/power_supply/batteryjsr/capacity";
     public static final String SYS_BATTERY_STATUS_JSR = "/sys/class/power_supply/batteryjsr/status";
     private String typeBattery = null;
+    private String stateBattery = null;
     public boolean isSupport = false;
 
-    BatteryManager(String typeBattery) {
-        if(isSupportCheck(typeBattery))
-            this.typeBattery = typeBattery;
+    BatteryManager(String typeBattery, String stateBattery) {
+        if((typeBattery != null) && (stateBattery != null))
+            if(isSupportCheck(typeBattery) && isSupportCheck(stateBattery)) {
+                this.typeBattery = typeBattery;
+                this.stateBattery = stateBattery;
+            } else isSupport = false;
     }
 
     protected BatteryManager(Parcel in) {
         typeBattery = in.readString();
+        stateBattery = in.readString();
         isSupport = in.readByte() != 0;
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(typeBattery);
+        dest.writeString(stateBattery);
         dest.writeByte((byte) (isSupport ? 1 : 0));
     }
 
@@ -61,11 +67,19 @@ public class BatteryManager implements Parcelable {
         return isSupport = false;
     }
 
-    public String getValues() {
+    public String getCapacity() {
         if(isSupport) {
             File file = new File(typeBattery);
                 return OneLineReader.getValue(file);
         }
         return  "0";
+    }
+
+    public String getState() {
+        if(isSupport) {
+            File file = new File(stateBattery);
+            return " " + OneLineReader.getValue(file);
+        }
+        return  " - ";
     }
 }

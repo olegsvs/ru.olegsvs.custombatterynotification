@@ -22,7 +22,6 @@ public class SettingsActivity extends AppCompatActivity {
     private final String batteries[] = {"BAT1" , "BAT2"};
     
     public BatteryManager mBatteryManager = null;
-    public BatteryManagerService mBatteryManagerService = null;
     public Spinner spinnerBatteries;
     public CheckBox chbServiceStatus;
     public CheckBox chbAutostartService;
@@ -33,11 +32,12 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        mBatteryManager = new BatteryManager(BatteryManager.SYS_BATTERY_CAPACITY);
+        mBatteryManager = new BatteryManager(BatteryManager.SYS_BATTERY_CAPACITY,BatteryManager.SYS_BATTERY_STATUS);
         if (mBatteryManager.isSupport) {
             Log.i(SettingsActivity.TAG, "onCreate: isSupported");
             Intent intent = new Intent(this, BatteryManagerService.class);
             intent.putExtra("BatteryManager", mBatteryManager);
+            mBatteryManager = null;
             startService(intent);
         }
 

@@ -15,7 +15,6 @@ public class BatteryBroadcastReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         if ("android.intent.action.BOOT_COMPLETED".equals(intent.getAction())) {
             SharedPreferences sharedPref = context.getSharedPreferences("Settings", Context.MODE_PRIVATE);
-
             if(sharedPref.getBoolean("serviceAutoStart", false)) {
                 Intent myIntent = new Intent(context, BatteryManagerService.class);
                 context.startService(myIntent);

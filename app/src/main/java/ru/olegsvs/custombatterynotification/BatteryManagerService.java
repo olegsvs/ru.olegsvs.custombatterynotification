@@ -18,13 +18,6 @@ import android.util.Log;
  */
 
 public class BatteryManagerService extends Service{
-    private final String BAT1 = "BAT1 ";
-    private final String BAT2 = "BAT2 ";
-    private final int NOTIFICATION_CUSTOM_BATTERY = 444;
-    private static int interval = 2000;
-    NotificationManager mNotificationManager = null;
-    BatteryManager mBatteryManager = null;
-
     private int iconRes[] = {
             R.drawable.battery_green_0,R.drawable.battery_green_1,
             R.drawable.battery_green_2,R.drawable.battery_green_3,
@@ -79,32 +72,29 @@ public class BatteryManagerService extends Service{
             R.drawable.battery_green_100
 
     };
-    private static int BAT1_CAPACITY = 0;
-    private static int BAT2_CAPACITY = 0;
-    private static boolean showBAT2 = false;
+    private final int NOTIFICATION_CUSTOM_BATTERY = 444;
+    private int BAT_CAPACITY = 0;
+    private static int interval = 2000;
+    private final String PERCENT= "%";
+    private final String UNRECOGNIZED_VALUES= "Unrecognized values";
+
     private static boolean IS_STARTED = false;
+
     private NotificationCompat.Builder mBuilder = null;
     Handler myHandler = null;
+    NotificationManager mNotificationManager = null;
+    BatteryManager mBatteryManager = null;
 
     public static boolean isMyServiceRunning() {
-        Log.i(SettingsActivity.TAG, "isMyServiceRunning: IS_STARTED = " + IS_STARTED);
+        Log.i(SettingsActivity.TAG, "BatteryManagerService started ? " + IS_STARTED);
         return IS_STARTED;
     }
 
     public static void setInterval(int interval) {
         BatteryManagerService.interval = interval * 1000;
-        Log.i(SettingsActivity.TAG, "setInterval: " + BatteryManagerService.interval);
+        Log.i(SettingsActivity.TAG, "BatteryManagerService setInterval: " + BatteryManagerService.interval);
     }
-    public static void setBatteryForShow(int type) {
-        if (type == 0) {
-            showBAT2 = false;
-            Log.i(SettingsActivity.TAG, "setBatteryForShow: showBAT2 = " + showBAT2);
-        } else
-            if (BAT2_CAPACITY != 0) {
-                showBAT2 = true;
-                Log.i(SettingsActivity.TAG, "setBatteryForShow: showBAT2 = " + showBAT2);
-            }
-    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -112,52 +102,53 @@ public class BatteryManagerService extends Service{
         if (mNotificationManager == null)
             mNotificationManager = (NotificationManager)  getSystemService(NOTIFICATION_SERVICE);
         mNotificationManager.cancelAll();
-        Log.i(SettingsActivity.TAG, "onDestroy: BatteryManagerService destroy!");
+        Log.i(SettingsActivity.TAG, "BatteryManagerService onDestroy: BatteryManagerService destroy!");
+    }
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        mBatteryManager = intent.getParcelableExtra("BatteryManager");
-        Log.i(SettingsActivity.TAG, "onStartCommand:  " + mBatteryManager.isSupport);
-   /*     if (!BatteryManager.isSTDSupportCheck() && !BatteryManager.isJSRSupportCheck()) {
-            Log.e(SettingsActivity.TAG, "onStartCommand: serviceRun = false || notSupported!");
-            stopSelf();
-            return super.onStartCommand(intent, flags, startId);
-        }
         SharedPreferences sharedPref = getSharedPreferences("Settings", Context.MODE_PRIVATE);
-
         if(sharedPref.getBoolean("serviceRun", false)) {
             Log.i(SettingsActivity.TAG, "onStartCommand: BatteryManagerService start");
-             mNotificationManager =
-                    (NotificationManager) getSystemService(Service.NOTIFICATION_SERVICE);
-            interval = 1000 * sharedPref.getInt("interval", 2);
-            Log.i(SettingsActivity.TAG, "onStartCommand: load interval = " + interval);
-            createNotify();
-            Log.i(SettingsActivity.TAG, "onStartCommand: create and show notification");
-            return super.onStartCommand(intent, flags, startId);
+            mBatteryManager = intent.getParcelableExtra("BatteryManager");
+
+            if(mBatteryManager == null) {
+                String lastTypeBattery = sharedPref.getString("lastTypeBattery", "null");
+                String lastStateBattery = sharedPref.getString("lastStateBattery", "null");
+                mBatteryManager = new BatteryManager(lastTypeBattery, lastStateBattery);
+            }
+            if(mBatteryManager.isSupport) {
+                Log.i(SettingsActivity.TAG, "BatteryManagerService onStartCommand:  " + mBatteryManager.isSupport);
+
+                 mNotificationManager =
+                        (NotificationManager) getSystemService(Service.NOTIFICATION_SERVICE);
+                interval = 1000 * sharedPref.getInt("interval", 2);
+                Log.i(SettingsActivity.TAG, "onStartCommand: load interval = " + interval);
+                createNotify();
+                Log.i(SettingsActivity.TAG, "onStartCommand: create and show notification");
+                return super.onStartCommand(intent, flags, startId);
+            } else stopSelf();
         } else {
             Log.i(SettingsActivity.TAG, "onStartCommand: serviceRun = false");
             stopSelf();
             return super.onStartCommand(intent, flags, startId);
-        } */
+        }
         return super.onStartCommand(intent, flags, startId);
     }
 
     private String getResults() {
-     /*   if (!BatteryManager.isJSRSupportCheck()) {
-            BAT1_CAPACITY = Integer.parseInt(BatteryManager.getValues(BatteryManager.SYS_BATTERY_CAPACITY));
-            return (BAT1 + BAT1_CAPACITY + "% "
-                         + BatteryManager.getValues(BatteryManager.SYS_BATTERY_STATUS) + " ");
-
-        } else {
-            BAT1_CAPACITY = Integer.parseInt(BatteryManager.getValues(BatteryManager.SYS_BATTERY_CAPACITY));
-            BAT2_CAPACITY = Integer.parseInt(BatteryManager.getValues(BatteryManager.SYS_BATTERY_CAPACITY_JSR));
-            return (BAT1 + BAT1_CAPACITY + "% "
-                    + BatteryManager.getValues(BatteryManager.SYS_BATTERY_STATUS) + " \n"
-                    + BAT2 + BAT2_CAPACITY + " "
-                    + BatteryManager.getValues(BatteryManager.SYS_BATTERY_STATUS_JSR) + " ");
-        } */
-     return  null;
+        try{
+        BAT_CAPACITY = Integer.parseInt(mBatteryManager.getCapacity());
+        return BAT_CAPACITY + PERCENT + mBatteryManager.getState(); } catch (Exception e)  {
+            Log.e(SettingsActivity.TAG, "getResults: Unrecognized values! " + e.toString());
+        }
+        return UNRECOGNIZED_VALUES;
     }
 
     private void createNotify() {
@@ -180,7 +171,7 @@ public class BatteryManagerService extends Service{
                         PendingIntent.FLAG_UPDATE_CURRENT
                 );
         mBuilder.setContentIntent(resultPendingIntent);
-        if (showBAT2) mBuilder.setSmallIcon(iconRes[BAT2_CAPACITY]); else mBuilder.setSmallIcon(iconRes[BAT1_CAPACITY]);
+        mBuilder.setSmallIcon(iconRes[BAT_CAPACITY]);
         mNotificationManager.notify(NOTIFICATION_CUSTOM_BATTERY, mBuilder.build());
 
         myHandler = new Handler();
@@ -192,7 +183,7 @@ public class BatteryManagerService extends Service{
             public void run() {
                 if(IS_STARTED) {
                     mBuilder.setContentText(getResults());
-                    if (showBAT2) mBuilder.setSmallIcon(iconRes[BAT2_CAPACITY]); else mBuilder.setSmallIcon(iconRes[BAT1_CAPACITY]);
+                    mBuilder.setSmallIcon(iconRes[BAT_CAPACITY]);
                     mNotificationManager.notify(NOTIFICATION_CUSTOM_BATTERY, mBuilder.build());
                     myHandler.postDelayed(this, interval);
                 }
@@ -203,17 +194,11 @@ public class BatteryManagerService extends Service{
         myHandler.postDelayed(runnable, interval);
     }
 
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
-
     @Override
     public void onCreate() {
         super.onCreate();
         IS_STARTED = true;
-        Log.i(SettingsActivity.TAG, "onCreate: creating BatteryManagerService, IS_STARTED = " + IS_STARTED);
+        Log.i(SettingsActivity.TAG, "BatteryManagerService onCreate: creating BatteryManagerService, IS_STARTED = " + IS_STARTED);
     }
 
 }
