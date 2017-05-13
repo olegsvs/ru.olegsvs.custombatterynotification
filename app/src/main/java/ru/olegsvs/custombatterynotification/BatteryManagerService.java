@@ -146,6 +146,13 @@ public class BatteryManagerService extends Service{
     private String getResults() {
         try{
         BAT_CAPACITY = Integer.parseInt(this.mBatteryManager.getCapacity());
+            if(!(BAT_CAPACITY >= 0 && BAT_CAPACITY <= 100)){
+                Log.e(SettingsActivity.TAG, "getResults: BAT_CAPACITY index error [0::100]! " + BAT_CAPACITY);
+                Toast.makeText(getApplicationContext(),"BAT_CAPACITY index error [0::100] = " + BAT_CAPACITY,Toast.LENGTH_LONG).show();
+                this.mBatteryManager = null;
+                stopSelf();
+                return UNRECOGNIZED_VALUES;
+            }
         return BAT_CAPACITY + PERCENT + this.mBatteryManager.getState(); } catch (Exception e)  {
             Log.e(SettingsActivity.TAG, "getResults: Unrecognized values! " + e.toString());
             Toast.makeText(getApplicationContext(),"Unrecognized values! " + e.toString(),Toast.LENGTH_LONG).show();
@@ -175,7 +182,6 @@ public class BatteryManagerService extends Service{
                         PendingIntent.FLAG_UPDATE_CURRENT
                 );
         mBuilder.setContentIntent(resultPendingIntent);
-        mBuilder.setSmallIcon(iconRes[BAT_CAPACITY]);
         mNotificationManager.notify(NOTIFICATION_CUSTOM_BATTERY, mBuilder.build());
 
         myHandler = new Handler();
@@ -189,7 +195,7 @@ public class BatteryManagerService extends Service{
                     mBuilder.setContentText(getResults());
                     mBuilder.setSmallIcon(iconRes[BAT_CAPACITY]);
                     mNotificationManager.notify(NOTIFICATION_CUSTOM_BATTERY, mBuilder.build());
-                    myHandler.postDelayed(this, interval);
+                    myHandler.postDelayed(runnable, interval);
                 }
             }
 
