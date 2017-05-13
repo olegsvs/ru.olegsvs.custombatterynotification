@@ -85,6 +85,7 @@ public class BatteryManagerService extends Service{
     Handler myHandler = null;
     NotificationManager mNotificationManager = null;
     BatteryManager mBatteryManager = null;
+    Runnable runnable= null;
 
     public static boolean isMyServiceRunning() {
         Log.i(SettingsActivity.TAG, "BatteryManagerService started ? " + IS_STARTED);
@@ -104,6 +105,7 @@ public class BatteryManagerService extends Service{
             mNotificationManager = (NotificationManager)  getSystemService(NOTIFICATION_SERVICE);
         mNotificationManager.cancelAll();
         mBatteryManager = null;
+        myHandler.removeCallbacks(runnable);
         Log.i(SettingsActivity.TAG, "BatteryManagerService onDestroy: BatteryManagerService destroy!");
     }
 
@@ -179,7 +181,7 @@ public class BatteryManagerService extends Service{
         myHandler = new Handler();
         Log.i(SettingsActivity.TAG, "handler started");
         Log.i(SettingsActivity.TAG, "state : " + getResults());
-        Runnable runnable = new Runnable(){
+        runnable = new Runnable(){
 
             @Override
             public void run() {
