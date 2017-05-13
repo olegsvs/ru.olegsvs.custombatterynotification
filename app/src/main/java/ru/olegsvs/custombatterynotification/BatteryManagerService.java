@@ -170,6 +170,7 @@ public class BatteryManagerService extends Service{
                         .setStyle(new NotificationCompat.BigTextStyle().bigText(getResults()))
                         .setOngoing(true)
                         .setColor(color)
+                        .setSmallIcon(iconRes[BAT_CAPACITY])
                         .setWhen(0)
                         .setContentText(getResults());
         Intent resultIntent = new Intent(this, SettingsActivity.class);
