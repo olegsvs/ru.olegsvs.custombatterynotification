@@ -85,7 +85,7 @@ public class BatteryManagerService extends Service{
     Handler myHandler = null;
     NotificationManager mNotificationManager = null;
     BatteryManager mBatteryManager = null;
-    Runnable runnable= null;
+    Runnable runnable = null;
 
     public static boolean isMyServiceRunning() {
         Log.i(SettingsActivity.TAG, "BatteryManagerService started ? " + IS_STARTED);
