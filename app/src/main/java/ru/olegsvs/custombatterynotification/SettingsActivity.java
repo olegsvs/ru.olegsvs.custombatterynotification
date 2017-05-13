@@ -31,6 +31,12 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+        try {
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+            getSupportActionBar().setIcon(R.mipmap.ic_launcher);
+        } catch (NullPointerException e) {
+            Log.e(TAG, "onCreate: setDisplayShowHomeEnabled " +e.toString());
+        }
 
         sharedPref = getSharedPreferences("Settings", Context.MODE_PRIVATE);
         Log.i(SettingsActivity.TAG, "onCreate:         setupViews();");
