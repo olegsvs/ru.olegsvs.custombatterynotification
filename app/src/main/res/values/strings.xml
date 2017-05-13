@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Custom Battery Notify</string>
     <string name="chbAutoStartService">Autostart service at boot?</string>
-    <string name="tvBatteries">Select battery path for show in StatusBar</string>
+    <string name="tvBatteries">Select battery path</string>
     <string name="intervalTV">Interval of scanning battery state, secs</string>
     <string name="intervalBTN">Apply</string>
     <string name="intervalWarning">Set value > 0!</string>
