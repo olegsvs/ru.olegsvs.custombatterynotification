@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Custom Battery Notify</string>
-    <string name="chbAutoStartService">Атозапуск при загрузке Android?</string>
-    <string name="tvBatteries">Выберите путь к батарее, для показа ее заряда в виде иконки</string>
+    <string name="chbAutoStartService">Автозапуск при загрузке Android?</string>
+    <string name="tvBatteries">Выберите путь к батарее</string>
     <string name="intervalTV">Интервал скана состояния батарей, секунды</string>
     <string name="intervalBTN">Установить</string>
     <string name="intervalWarning">Укажите значение > 0!</string>
