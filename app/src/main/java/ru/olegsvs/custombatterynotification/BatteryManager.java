@@ -1,5 +1,7 @@
 package ru.olegsvs.custombatterynotification;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 
 import java.io.File;
@@ -8,53 +10,62 @@ import java.io.File;
  * Created by olegsvs on 11.05.2017.
  */
 
-public class BatteryManager {
+public class BatteryManager implements Parcelable {
     public static final String SYS_BATTERY_CAPACITY = "/sys/class/power_supply/battery/capacity";
     public static final String SYS_BATTERY_STATUS = "/sys/class/power_supply/battery/status";
     public static final String SYS_BATTERY_CAPACITY_JSR = "/sys/class/power_supply/batteryjsr/capacity";
     public static final String SYS_BATTERY_STATUS_JSR = "/sys/class/power_supply/batteryjsr/status";
-    private static boolean IS_JSR_SUPPORT = false;
-    private static boolean IS_STD_SUPPORT = false;
+    private String typeBattery = null;
+    public boolean isSupport = false;
 
-    BatteryManager() {
-
+    BatteryManager(String typeBattery) {
+        if(isSupportCheck(typeBattery))
+            this.typeBattery = typeBattery;
     }
 
-    static public boolean isJSRSupportCheck() {
-        File file = new File(SYS_BATTERY_CAPACITY_JSR);
-        if (file.exists()) {
-            Log.w(SettingsActivity.TAG, "isJSRSupportCheck:  " + SYS_BATTERY_CAPACITY_JSR + " exists!");
-            return IS_JSR_SUPPORT = true;
-        }
-        Log.w(SettingsActivity.TAG, "isJSRSupportCheck:  " + SYS_BATTERY_CAPACITY_JSR + " NOT exists!");
-        return IS_JSR_SUPPORT = false;
+    protected BatteryManager(Parcel in) {
+        typeBattery = in.readString();
+        isSupport = in.readByte() != 0;
     }
 
-    static public boolean isSTDSupportCheck() {
-        File file = new File(SYS_BATTERY_CAPACITY);
-        if (file.exists()) {
-            Log.w(SettingsActivity.TAG, "isSTDSupportCheck:  " + SYS_BATTERY_CAPACITY + " exists!");
-            return IS_STD_SUPPORT = true;
-        }
-        Log.w(SettingsActivity.TAG, "isSTDSupportCheck:  " + SYS_BATTERY_CAPACITY + " NOT exists!");
-        return IS_STD_SUPPORT = false;
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(typeBattery);
+        dest.writeByte((byte) (isSupport ? 1 : 0));
     }
 
-    static public String getValues(String typeBattery) {
-        if ((typeBattery == SYS_BATTERY_CAPACITY_JSR || typeBattery == SYS_BATTERY_STATUS_JSR) && !isJSRSupportCheck()) {
-            Log.e(SettingsActivity.TAG, "getValues: " + "ERROR for get values from JSR battery paths, IS_JSR_SUPPORT = " + IS_JSR_SUPPORT);
-            return "0";
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<BatteryManager> CREATOR = new Creator<BatteryManager>() {
+        @Override
+        public BatteryManager createFromParcel(Parcel in) {
+            return new BatteryManager(in);
         }
-        if ((typeBattery == SYS_BATTERY_CAPACITY || typeBattery == SYS_BATTERY_STATUS) && !isSTDSupportCheck()) {
-            Log.e(SettingsActivity.TAG, "getValues: " + "ERROR for get values from STD battery paths, IS_STD_SUPPORT = " + IS_STD_SUPPORT);
-            return "0";
+
+        @Override
+        public BatteryManager[] newArray(int size) {
+            return new BatteryManager[size];
         }
+    };
+
+    private boolean isSupportCheck(String typeBattery) {
         File file = new File(typeBattery);
-          if (file.exists()) {
-              Log.i(SettingsActivity.TAG, "getValues: " + typeBattery + " exists!");
-              return OneLineReader.getValue(file);
-          } else Log.e(SettingsActivity.TAG, "getValues: " + typeBattery + " not exists!");
+        if (file.exists()) {
+            Log.w(SettingsActivity.TAG, "isSupportCheck:  " + typeBattery + " exists!");
+            return isSupport = true;
+        }
+        Log.w(SettingsActivity.TAG, "isSupportCheck:  " + typeBattery + " NOT exists!");
+        return isSupport = false;
+    }
 
+    public String getValues() {
+        if(isSupport) {
+            File file = new File(typeBattery);
+                return OneLineReader.getValue(file);
+        }
         return  "0";
     }
 }

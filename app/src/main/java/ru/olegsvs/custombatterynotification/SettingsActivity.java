@@ -20,7 +20,9 @@ import android.widget.Toast;
 public class SettingsActivity extends AppCompatActivity {
     public static String TAG = SettingsActivity.class.getSimpleName();
     private final String batteries[] = {"BAT1" , "BAT2"};
-
+    
+    public BatteryManager mBatteryManager = null;
+    public BatteryManagerService mBatteryManagerService = null;
     public Spinner spinnerBatteries;
     public CheckBox chbServiceStatus;
     public CheckBox chbAutostartService;
@@ -31,7 +33,15 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        if (!BatteryManager.isSTDSupportCheck() && !BatteryManager.isJSRSupportCheck()) {
+        mBatteryManager = new BatteryManager(BatteryManager.SYS_BATTERY_CAPACITY);
+        if (mBatteryManager.isSupport) {
+            Log.i(SettingsActivity.TAG, "onCreate: isSupported");
+            Intent intent = new Intent(this, BatteryManagerService.class);
+            intent.putExtra("BatteryManager", mBatteryManager);
+            startService(intent);
+        }
+
+    /**    if (!BatteryManager.isSTDSupportCheck() && !BatteryManager.isJSRSupportCheck()) {
             Log.e(TAG, "onCreate: Application not supported!");
             Intent intent = new Intent(this, BatteryManagerService.class);
             stopService(intent);
@@ -43,8 +53,8 @@ public class SettingsActivity extends AppCompatActivity {
             Intent intent = new Intent(this, BatteryManagerService.class);
             startService(intent);
             Log.i(SettingsActivity.TAG, "onCreate: service NOT running , startService BatteryManagerService");
-        }
-        chbServiceStatus = (CheckBox) findViewById(R.id.chbServiceStatus);
+        } */
+       /* chbServiceStatus = (CheckBox) findViewById(R.id.chbServiceStatus);
         chbAutostartService = (CheckBox) findViewById(R.id.chbServiceAutoStart);
         spinnerBatteries = (Spinner) findViewById(R.id.spinnerBatteries);
         intervalSetBTN = (Button) findViewById(R.id.intervalSetBTN);
@@ -86,7 +96,7 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onNothingSelected(AdapterView<?> arg0) {
             }
-        });
+        });  */
     }
 
     public void notSupportedDialog() {

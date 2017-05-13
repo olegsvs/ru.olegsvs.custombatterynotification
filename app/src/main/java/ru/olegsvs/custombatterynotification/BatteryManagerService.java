@@ -23,6 +23,7 @@ public class BatteryManagerService extends Service{
     private final int NOTIFICATION_CUSTOM_BATTERY = 444;
     private static int interval = 2000;
     NotificationManager mNotificationManager = null;
+    BatteryManager mBatteryManager = null;
 
     private int iconRes[] = {
             R.drawable.battery_green_0,R.drawable.battery_green_1,
@@ -84,6 +85,7 @@ public class BatteryManagerService extends Service{
     private static boolean IS_STARTED = false;
     private NotificationCompat.Builder mBuilder = null;
     Handler myHandler = null;
+
     public static boolean isMyServiceRunning() {
         Log.i(SettingsActivity.TAG, "isMyServiceRunning: IS_STARTED = " + IS_STARTED);
         return IS_STARTED;
@@ -115,7 +117,9 @@ public class BatteryManagerService extends Service{
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (!BatteryManager.isSTDSupportCheck() && !BatteryManager.isJSRSupportCheck()) {
+        mBatteryManager = intent.getParcelableExtra("BatteryManager");
+        Log.i(SettingsActivity.TAG, "onStartCommand:  " + mBatteryManager.isSupport);
+   /*     if (!BatteryManager.isSTDSupportCheck() && !BatteryManager.isJSRSupportCheck()) {
             Log.e(SettingsActivity.TAG, "onStartCommand: serviceRun = false || notSupported!");
             stopSelf();
             return super.onStartCommand(intent, flags, startId);
@@ -135,11 +139,12 @@ public class BatteryManagerService extends Service{
             Log.i(SettingsActivity.TAG, "onStartCommand: serviceRun = false");
             stopSelf();
             return super.onStartCommand(intent, flags, startId);
-        }
+        } */
+        return super.onStartCommand(intent, flags, startId);
     }
 
     private String getResults() {
-        if (!BatteryManager.isJSRSupportCheck()) {
+     /*   if (!BatteryManager.isJSRSupportCheck()) {
             BAT1_CAPACITY = Integer.parseInt(BatteryManager.getValues(BatteryManager.SYS_BATTERY_CAPACITY));
             return (BAT1 + BAT1_CAPACITY + "% "
                          + BatteryManager.getValues(BatteryManager.SYS_BATTERY_STATUS) + " ");
@@ -151,7 +156,8 @@ public class BatteryManagerService extends Service{
                     + BatteryManager.getValues(BatteryManager.SYS_BATTERY_STATUS) + " \n"
                     + BAT2 + BAT2_CAPACITY + " "
                     + BatteryManager.getValues(BatteryManager.SYS_BATTERY_STATUS_JSR) + " ");
-        }
+        } */
+     return  null;
     }
 
     private void createNotify() {
