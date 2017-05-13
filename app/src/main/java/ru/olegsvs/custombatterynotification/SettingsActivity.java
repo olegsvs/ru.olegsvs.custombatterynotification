@@ -17,9 +17,17 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileFilter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+
 public class SettingsActivity extends AppCompatActivity {
     public static String TAG = SettingsActivity.class.getSimpleName();
-    private final String batteries[] = {"BAT1" , "BAT2"};
     
     public BatteryManager mBatteryManager = null;
     public Spinner spinnerBatteries;
@@ -32,14 +40,41 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        mBatteryManager = new BatteryManager(BatteryManager.SYS_BATTERY_CAPACITY,BatteryManager.SYS_BATTERY_STATUS);
+
+        final Spinner s = (Spinner) findViewById(R.id.spinnerBatteries);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, getPaths());
+        s.setAdapter(adapter);
+
+        s.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int position, long id) {
+                Intent intent = new Intent(getApplicationContext(), BatteryManagerService.class);
+                startService(intent);
+                stopService(intent);
+                mBatteryManager = new BatteryManager(s.getSelectedItem().toString() + "/capacity",s.getSelectedItem().toString() + "/status");
+                if (mBatteryManager.isSupport) {
+                    Log.i(SettingsActivity.TAG, "onCreate: isSupported");
+
+                    intent.putExtra("BatteryManager", mBatteryManager);
+                    mBatteryManager = null;
+                    startService(intent);
+                }
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+            }
+        });
+
+      /*  mBatteryManager = new BatteryManager(BatteryManager.SYS_BATTERY_CAPACITY,BatteryManager.SYS_BATTERY_STATUS);
         if (mBatteryManager.isSupport) {
             Log.i(SettingsActivity.TAG, "onCreate: isSupported");
             Intent intent = new Intent(this, BatteryManagerService.class);
             intent.putExtra("BatteryManager", mBatteryManager);
             mBatteryManager = null;
             startService(intent);
-        }
+        }*/
 
     /**    if (!BatteryManager.isSTDSupportCheck() && !BatteryManager.isJSRSupportCheck()) {
             Log.e(TAG, "onCreate: Application not supported!");
@@ -97,6 +132,20 @@ public class SettingsActivity extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> arg0) {
             }
         });  */
+    }
+
+
+    public List<String> getPaths() {
+        List<String> paths = new ArrayList<String>();
+        File directory = new File("/sys/class/power_supply");
+
+        File[] files = directory.listFiles();
+
+        for (int i = 0; i < files.length; ++i) {
+            paths.add(files[i].getAbsolutePath());
+        }
+        Log.i(SettingsActivity.TAG, "onCreate: " + paths.toString());
+        return paths;
     }
 
     public void notSupportedDialog() {

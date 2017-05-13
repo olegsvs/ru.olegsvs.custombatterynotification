@@ -114,7 +114,7 @@ public class BatteryManagerService extends Service{
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         SharedPreferences sharedPref = getSharedPreferences("Settings", Context.MODE_PRIVATE);
-        if(sharedPref.getBoolean("serviceRun", false)) {
+        if(/*sharedPref.getBoolean("serviceRun", false)*/ true) {
             Log.i(SettingsActivity.TAG, "onStartCommand: BatteryManagerService start");
             mBatteryManager = intent.getParcelableExtra("BatteryManager");
 
