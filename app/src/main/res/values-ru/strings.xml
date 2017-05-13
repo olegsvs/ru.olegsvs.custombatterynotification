@@ -1,11 +1,12 @@
 <resources>
     <string name="app_name">Custom Battery Notify</string>
-    <string name="chbEnableService">Показывать батарейку в уведомлениях?</string>
     <string name="chbAutoStartService">Атозапуск при загрузке Android?</string>
-    <string name="tvBatteries">Выберите батарейку, для показа ее заряда в виде иконки</string>
-    <string name="noSupportedJSR">JSR батарея не поддерживается на вашем устройстве!</string>
+    <string name="tvBatteries">Выберите путь к батарее, для показа ее заряда в виде иконки</string>
     <string name="intervalTV">Интервал скана состояния батарей, секунды</string>
     <string name="intervalBTN">Установить</string>
     <string name="intervalWarning">Укажите значение > 0!</string>
-    <string name="not_supported">Ваше устройство не поддерживается!\nПриложение бужет закрыто.</string>
+    <string name="capacityTV">Заряд батареи в файле</string>
+    <string name="statusTV">Статус батареи в файле</string>
+    <string name="showNotifyButton">Показать уведомление</string>
+    <string name="dismissNotifyButton">Убрать уведомление</string>
 </resources>

@@ -11,10 +11,6 @@ import java.io.File;
  */
 
 public class BatteryManager implements Parcelable {
-    public static final String SYS_BATTERY_CAPACITY = "/sys/class/power_supply/battery/capacity";
-    public static final String SYS_BATTERY_STATUS = "/sys/class/power_supply/battery/status";
-    public static final String SYS_BATTERY_CAPACITY_JSR = "/sys/class/power_supply/batteryjsr/capacity";
-    public static final String SYS_BATTERY_STATUS_JSR = "/sys/class/power_supply/batteryjsr/status";
     private String typeBattery = null;
     private String stateBattery = null;
     public boolean isSupport = false;

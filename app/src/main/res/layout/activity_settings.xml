@@ -6,15 +6,23 @@
     android:layout_height="match_parent"
     tools:context="ru.olegsvs.custombatterynotification.SettingsActivity">
 
-    <CheckBox
-        android:id="@+id/chbServiceStatus"
-        android:onClick="cnbServiceStatusClick"
+    <TextView
+        android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/chbEnableService"
+        android:text="@string/capacityTV"
         tools:layout_editor_absoluteX="16dp"
         android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/chbServiceAutoStart" />
+        app:layout_constraintTop_toBottomOf="@+id/spinnerStatus" />
+
+    <Spinner
+        android:id="@+id/spinnerCapacity"
+        android:layout_width="351dp"
+        android:layout_height="25dp"
+        tools:layout_editor_absoluteX="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/textView4"
+        tools:layout_editor_absoluteY="261dp" />
 
     <CheckBox
         android:id="@+id/chbServiceAutoStart"
@@ -27,8 +35,8 @@
 
     <Spinner
         android:id="@+id/spinnerBatteries"
-        android:layout_width="353dp"
-        android:layout_height="38dp"
+        android:layout_width="351dp"
+        android:layout_height="25dp"
         tools:layout_editor_absoluteX="8dp"
         android:layout_marginTop="8dp"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
@@ -40,7 +48,7 @@
         android:text="@string/tvBatteries"
         tools:layout_editor_absoluteX="16dp"
         android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/chbServiceStatus" />
+        app:layout_constraintTop_toBottomOf="@+id/chbServiceAutoStart" />
 
     <TextView
         android:id="@+id/textView2"
@@ -49,7 +57,7 @@
         android:text="@string/intervalTV"
         tools:layout_editor_absoluteX="16dp"
         android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/spinnerBatteries" />
+        app:layout_constraintTop_toBottomOf="@+id/spinnerCapacity" />
 
     <EditText
         android:id="@+id/intervalET"
@@ -58,10 +66,11 @@
         android:text="2"
         android:ems="10"
         android:inputType="number"
-        android:layout_marginTop="7dp"
+        android:layout_marginTop="9dp"
         app:layout_constraintTop_toBottomOf="@+id/textView2"
-        android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        android:layout_marginLeft="16dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginStart="16dp" />
 
     <Button
         android:id="@+id/intervalSetBTN"
@@ -73,8 +82,54 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.04"
+        android:layout_marginTop="9dp"
+        app:layout_constraintTop_toBottomOf="@+id/textView2"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/statusTV"
+        tools:layout_editor_absoluteX="16dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/spinnerBatteries" />
+
+    <Spinner
+        android:id="@+id/spinnerStatus"
+        android:layout_width="351dp"
+        android:layout_height="25dp"
+        tools:layout_editor_absoluteX="8dp"
         android:layout_marginTop="7dp"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        app:layout_constraintTop_toBottomOf="@+id/textView3"
+        tools:layout_editor_absoluteY="202dp" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/showNotifyButton"
+        android:onClick="showNotifyClick"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/intervalET"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/dismissNotifyButton"
+        android:onClick="dismissNotifyClick"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/button"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
+import android.widget.Toast;
 
 /**
  * Created by user on 11.05.2017.
@@ -102,6 +103,7 @@ public class BatteryManagerService extends Service{
         if (mNotificationManager == null)
             mNotificationManager = (NotificationManager)  getSystemService(NOTIFICATION_SERVICE);
         mNotificationManager.cancelAll();
+        mBatteryManager = null;
         Log.i(SettingsActivity.TAG, "BatteryManagerService onDestroy: BatteryManagerService destroy!");
     }
 
@@ -114,9 +116,11 @@ public class BatteryManagerService extends Service{
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         SharedPreferences sharedPref = getSharedPreferences("Settings", Context.MODE_PRIVATE);
-        if(/*sharedPref.getBoolean("serviceRun", false)*/ true) {
-            Log.i(SettingsActivity.TAG, "onStartCommand: BatteryManagerService start");
+        Log.i(SettingsActivity.TAG, "onStartCommand: BatteryManagerService start");
+
+        try {
             mBatteryManager = intent.getParcelableExtra("BatteryManager");
+        } catch (Exception e) { Log.e(SettingsActivity.TAG, "onStartCommand: getParcelableExtra " + e); }
 
             if(mBatteryManager == null) {
                 String lastTypeBattery = sharedPref.getString("lastTypeBattery", "null");
@@ -134,21 +138,19 @@ public class BatteryManagerService extends Service{
                 Log.i(SettingsActivity.TAG, "onStartCommand: create and show notification");
                 return super.onStartCommand(intent, flags, startId);
             } else stopSelf();
-        } else {
-            Log.i(SettingsActivity.TAG, "onStartCommand: serviceRun = false");
-            stopSelf();
-            return super.onStartCommand(intent, flags, startId);
-        }
         return super.onStartCommand(intent, flags, startId);
     }
 
     private String getResults() {
         try{
-        BAT_CAPACITY = Integer.parseInt(mBatteryManager.getCapacity());
-        return BAT_CAPACITY + PERCENT + mBatteryManager.getState(); } catch (Exception e)  {
+        BAT_CAPACITY = Integer.parseInt(this.mBatteryManager.getCapacity());
+        return BAT_CAPACITY + PERCENT + this.mBatteryManager.getState(); } catch (Exception e)  {
             Log.e(SettingsActivity.TAG, "getResults: Unrecognized values! " + e.toString());
+            Toast.makeText(getApplicationContext(),"Unrecognized values! " + e.toString(),Toast.LENGTH_LONG).show();
+            this.mBatteryManager = null;
+            stopSelf();
+            return UNRECOGNIZED_VALUES;
         }
-        return UNRECOGNIZED_VALUES;
     }
 
     private void createNotify() {

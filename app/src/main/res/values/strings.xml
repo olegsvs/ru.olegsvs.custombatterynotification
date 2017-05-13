@@ -1,11 +1,12 @@
 <resources>
     <string name="app_name">Custom Battery Notify</string>
-    <string name="chbEnableService">Show battery values notification on StatusBar?</string>
     <string name="chbAutoStartService">Autostart service at boot?</string>
-    <string name="tvBatteries">Select battery for show in StatusBar</string>
-    <string name="noSupportedJSR">JSR battery not supported on your device!</string>
+    <string name="tvBatteries">Select battery path for show in StatusBar</string>
     <string name="intervalTV">Interval of scanning battery state, secs</string>
     <string name="intervalBTN">Apply</string>
     <string name="intervalWarning">Set value > 0!</string>
-    <string name="not_supported">Your devise is not supported!\nApplication close.</string>
+    <string name="capacityTV">Capacity battery file is</string>
+    <string name="statusTV">Status battery file is</string>
+    <string name="showNotifyButton">Show notify</string>
+    <string name="dismissNotifyButton">Dismiss notify</string>
 </resources>
