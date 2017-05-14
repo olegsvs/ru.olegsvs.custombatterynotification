@@ -27,6 +27,8 @@ package ru.olegsvs.custombatterynotification;
 
         import android.util.Log;
 
+        import com.crashlytics.android.Crashlytics;
+
 public class OneLineReader {
 
     public static String getValue(File _f) {
@@ -45,6 +47,7 @@ public class OneLineReader {
             fs.close();
         } catch (Exception ex) {
             ex.printStackTrace();
+            Crashlytics.logException(ex);
         }
         return readedValue;
     }

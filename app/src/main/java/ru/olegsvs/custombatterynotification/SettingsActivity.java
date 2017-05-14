@@ -133,6 +133,7 @@ public class SettingsActivity extends AppCompatActivity {
             } else {mBatteryManager = null; }
         } catch (Exception e) {
             e.printStackTrace();
+            Crashlytics.logException(e);
             Toast.makeText(this,e.toString(),Toast.LENGTH_LONG).show();
         }
     }

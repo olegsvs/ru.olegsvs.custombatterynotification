@@ -215,6 +215,7 @@ public class BatteryManagerService extends Service{
             myHandler.postDelayed(runnable, interval);
         } catch (Exception e) {
             e.printStackTrace();
+            Crashlytics.logException(e);
             Toast.makeText(this,e.toString(),Toast.LENGTH_LONG).show();
         }
     }
