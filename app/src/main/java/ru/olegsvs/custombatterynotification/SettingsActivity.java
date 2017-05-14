@@ -97,23 +97,17 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public void loadPathsEntry() {
+        ArrayAdapter<String> adapterCapacity = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, ScannerPaths.getPathsEntryOfPowerSupply(spinnerBatteries.getSelectedItem().toString()));
+        ArrayAdapter<String> adapterStatus = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, ScannerPaths.getPathsEntryOfPowerSupply(spinnerBatteries.getSelectedItem().toString()));
         if((capacityFiles.getAdapter() == null) && (statusFiles.getAdapter() == null)) {
-            ArrayAdapter<String> adapterCapacity = new ArrayAdapter<String>(this,
-                    android.R.layout.simple_spinner_item, ScannerPaths.getPathsEntryOfPowerSupply(spinnerBatteries.getSelectedItem().toString()));
             capacityFiles.setAdapter(adapterCapacity);
-
-            ArrayAdapter<String> adapterStatus = new ArrayAdapter<String>(this,
-                    android.R.layout.simple_spinner_item, ScannerPaths.getPathsEntryOfPowerSupply(spinnerBatteries.getSelectedItem().toString()));
             statusFiles.setAdapter(adapterStatus);
             capacityFiles.setSelection(sharedPref.getInt("capacityFiles", 0));
             statusFiles.setSelection(sharedPref.getInt("statusFiles", 0));
         } else {
-            ArrayAdapter<String> adapterCapacity = new ArrayAdapter<String>(this,
-                    android.R.layout.simple_spinner_item, ScannerPaths.getPathsEntryOfPowerSupply(spinnerBatteries.getSelectedItem().toString()));
             capacityFiles.setAdapter(adapterCapacity);
-
-            ArrayAdapter<String> adapterStatus = new ArrayAdapter<String>(this,
-                    android.R.layout.simple_spinner_item, ScannerPaths.getPathsEntryOfPowerSupply(spinnerBatteries.getSelectedItem().toString()));
             statusFiles.setAdapter(adapterStatus);
         }
     }
