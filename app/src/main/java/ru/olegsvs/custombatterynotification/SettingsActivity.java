@@ -48,7 +48,6 @@ public class SettingsActivity extends AppCompatActivity {
         setupSpinner();
         Log.i(SettingsActivity.TAG, "onCreate:         loadParams();");
         loadParams();
-        throw new RuntimeException("awesome crash");
     }
 
     public void setupSpinner() {
