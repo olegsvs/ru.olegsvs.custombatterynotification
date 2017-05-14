@@ -24,5 +24,9 @@
         </receiver>
         <service android:name=".BatteryManagerService" android:enabled="true" android:exported="true" >
         </service>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="98cfdaf2bbaf46c32e46c0e88ae98681e1851be3" />
     </application>
+    <uses-permission android:name="android.permission.INTERNET" />
 </manifest>

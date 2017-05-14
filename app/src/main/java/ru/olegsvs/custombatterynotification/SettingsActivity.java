@@ -14,6 +14,8 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
+import com.crashlytics.android.Crashlytics;
+import io.fabric.sdk.android.Fabric;
 
 public class SettingsActivity extends AppCompatActivity {
     public static String TAG = SettingsActivity.class.getSimpleName();
@@ -30,6 +32,7 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_settings);
         try {
             getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -45,6 +48,7 @@ public class SettingsActivity extends AppCompatActivity {
         setupSpinner();
         Log.i(SettingsActivity.TAG, "onCreate:         loadParams();");
         loadParams();
+        throw new RuntimeException("awesome crash");
     }
 
     public void setupSpinner() {
