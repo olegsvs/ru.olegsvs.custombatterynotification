@@ -6,6 +6,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.nfc.FormatException;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
@@ -13,6 +14,10 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.crashlytics.android.Crashlytics;
+
+import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by olegsvs on 11.05.2017.
@@ -120,7 +125,6 @@ public class BatteryManagerService extends Service{
     public int onStartCommand(Intent intent, int flags, int startId) {
         SharedPreferences sharedPref = getSharedPreferences("Settings", Context.MODE_PRIVATE);
         Log.i(SettingsActivity.TAG, "onStartCommand: BatteryManagerService start");
-
         try {
             mBatteryManager = intent.getParcelableExtra("BatteryManager");
         } catch (Exception e) { Log.e(SettingsActivity.TAG, "onStartCommand: getParcelableExtra " + e); }
@@ -148,19 +152,23 @@ public class BatteryManagerService extends Service{
         try{
         BAT_CAPACITY = Integer.parseInt(this.mBatteryManager.getCapacity());
             if(!(BAT_CAPACITY >= 0 && BAT_CAPACITY <= 100)){
+                Crashlytics.log("getResults: BAT_CAPACITY index error [0::100]! " + BAT_CAPACITY);
                 Log.e(SettingsActivity.TAG, "getResults: BAT_CAPACITY index error [0::100]! " + BAT_CAPACITY);
                 Toast.makeText(getApplicationContext(),"BAT_CAPACITY index error [0::100] = " + BAT_CAPACITY,Toast.LENGTH_LONG).show();
-                this.mBatteryManager = null;
+                                this.mBatteryManager = null;
                 stopSelf();
                 return UNRECOGNIZED_VALUES;
+
             }
         return BAT_CAPACITY + PERCENT + this.mBatteryManager.getState(); } catch (Exception e)  {
+            Crashlytics.logException(new Throwable("getResults: Unrecognized values! " + e.toString()));
             Log.e(SettingsActivity.TAG, "getResults: Unrecognized values! " + e.toString());
             Toast.makeText(getApplicationContext(),"Unrecognized values! " + e.toString(),Toast.LENGTH_LONG).show();
             this.mBatteryManager = null;
             stopSelf();
             return UNRECOGNIZED_VALUES;
         }
+
     }
 
     private void createNotify() {
@@ -217,5 +225,4 @@ public class BatteryManagerService extends Service{
         IS_STARTED = true;
         Log.i(SettingsActivity.TAG, "BatteryManagerService onCreate: creating BatteryManagerService, IS_STARTED = " + IS_STARTED);
     }
-
 }
