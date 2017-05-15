@@ -11,28 +11,28 @@ import java.io.File;
  */
 
 public class BatteryManager implements Parcelable {
-    private String typeBattery = null;
-    private String stateBattery = null;
+    private String capacityBattery = null;
+    private String statusBattery = null;
     public boolean isSupport = false;
 
     BatteryManager(String typeBattery, String stateBattery) {
         if((typeBattery != null) && (stateBattery != null))
             if(isSupportCheck(typeBattery) && isSupportCheck(stateBattery)) {
-                this.typeBattery = typeBattery;
-                this.stateBattery = stateBattery;
+                this.capacityBattery = typeBattery;
+                this.statusBattery = stateBattery;
             } else isSupport = false;
     }
 
     protected BatteryManager(Parcel in) {
-        typeBattery = in.readString();
-        stateBattery = in.readString();
+        capacityBattery = in.readString();
+        statusBattery = in.readString();
         isSupport = in.readByte() != 0;
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(typeBattery);
-        dest.writeString(stateBattery);
+        dest.writeString(capacityBattery);
+        dest.writeString(statusBattery);
         dest.writeByte((byte) (isSupport ? 1 : 0));
     }
 
@@ -53,19 +53,19 @@ public class BatteryManager implements Parcelable {
         }
     };
 
-    private boolean isSupportCheck(String typeBattery) {
-        File file = new File(typeBattery);
+    private boolean isSupportCheck(String capacityBattery) {
+        File file = new File(capacityBattery);
         if (file.exists()) {
-            Log.w(SettingsActivity.TAG, "isSupportCheck:  " + typeBattery + " exists!");
+            Log.w(SettingsActivity.TAG, "isSupportCheck:  " + capacityBattery + " exists!");
             return isSupport = true;
         }
-        Log.w(SettingsActivity.TAG, "isSupportCheck:  " + typeBattery + " NOT exists!");
+        Log.w(SettingsActivity.TAG, "isSupportCheck:  " + capacityBattery + " NOT exists!");
         return isSupport = false;
     }
 
     public String getCapacity() {
         if(isSupport) {
-            File file = new File(typeBattery);
+            File file = new File(capacityBattery);
                 return OneLineReader.getValue(file);
         }
         return  "0";
@@ -73,7 +73,7 @@ public class BatteryManager implements Parcelable {
 
     public String getState() {
         if(isSupport) {
-            File file = new File(stateBattery);
+            File file = new File(statusBattery);
             return " " + OneLineReader.getValue(file);
         }
         return  " - ";

@@ -22,8 +22,8 @@ android {
         applicationId "ru.olegsvs.custombatterynotification"
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 6
-        versionName "1.6"
+        versionCode 7
+        versionName "1.6_140517"
     }
     buildTypes {
         release {

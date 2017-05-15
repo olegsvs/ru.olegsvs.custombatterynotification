@@ -42,15 +42,15 @@ public class SettingsActivity extends AppCompatActivity {
         }
 
         sharedPref = getSharedPreferences("Settings", Context.MODE_PRIVATE);
-        Log.i(SettingsActivity.TAG, "onCreate:         setupViews();");
+        Log.i(SettingsActivity.TAG, "onCreate:         setupViews");
         setupViews();
-        Log.i(SettingsActivity.TAG, "onCreate:         setupSpinner();");
-        setupSpinner();
-        Log.i(SettingsActivity.TAG, "onCreate:         loadParams();");
+        Log.i(SettingsActivity.TAG, "onCreate:         setupSpinners");
+        setupSpinners();
+        Log.i(SettingsActivity.TAG, "onCreate:         loadParams");
         loadParams();
     }
 
-    public void setupSpinner() {
+    public void setupSpinners() {
         if(!ScannerPaths.checkPaths()) {
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                     android.R.layout.simple_spinner_item, ScannerPaths.getPathsPowerSupply());
@@ -83,16 +83,16 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public void loadParams() {
-        Log.i(SettingsActivity.TAG, "onCreate: loading sharedPrefs batterySelection " + sharedPref.getInt("batterySelection",0));
-        Log.i(SettingsActivity.TAG, "onCreate: loading sharedPrefs serviceRun " + sharedPref.getBoolean("serviceRun", false));
-        Log.i(SettingsActivity.TAG, "onCreate: loading sharedPrefs serviceAutoStart " + sharedPref.getBoolean("serviceAutoStart", false));
-        Log.i(SettingsActivity.TAG, "onCreate: loading sharedPrefs interval " + sharedPref.getInt("interval", 2));
-        Log.i(SettingsActivity.TAG, "onCreate: loading sharedPrefs lastTypeBattery " + sharedPref.getString("lastTypeBattery", "null"));
-        Log.i(SettingsActivity.TAG, "onCreate: loading sharedPrefs lastStateBattery " + sharedPref.getString("lastStateBattery", "null"));
-        Log.i(SettingsActivity.TAG, "onCreate: loading sharedPrefs capacityFiles " + sharedPref.getInt("capacityFiles", 0));
-        Log.i(SettingsActivity.TAG, "onCreate: loading sharedPrefs statusFiles " + sharedPref.getInt("statusFiles", 0));
-        Log.i(SettingsActivity.TAG, "onCreate: loading sharedPrefs lastID " + sharedPref.getInt("lastID", 0));
-        Log.i(SettingsActivity.TAG, "onCreate: loading sharedPrefs lastIDString " + sharedPref.getString("lastIDString", ScannerPaths.power_supply));
+        Log.w(SettingsActivity.TAG, "onCreate: loading sharedPrefs batterySelection " + sharedPref.getInt("batterySelection",0));
+        Log.w(SettingsActivity.TAG, "onCreate: loading sharedPrefs serviceRun " + sharedPref.getBoolean("serviceRun", false));
+        Log.w(SettingsActivity.TAG, "onCreate: loading sharedPrefs serviceAutoStart " + sharedPref.getBoolean("serviceAutoStart", false));
+        Log.w(SettingsActivity.TAG, "onCreate: loading sharedPrefs interval " + sharedPref.getInt("interval", 2));
+        Log.w(SettingsActivity.TAG, "onCreate: loading sharedPrefs lastTypeBattery " + sharedPref.getString("lastTypeBattery", "null"));
+        Log.w(SettingsActivity.TAG, "onCreate: loading sharedPrefs lastStateBattery " + sharedPref.getString("lastStateBattery", "null"));
+        Log.w(SettingsActivity.TAG, "onCreate: loading sharedPrefs capacityFiles " + sharedPref.getInt("capacityFiles", 0));
+        Log.w(SettingsActivity.TAG, "onCreate: loading sharedPrefs statusFiles " + sharedPref.getInt("statusFiles", 0));
+        Log.w(SettingsActivity.TAG, "onCreate: loading sharedPrefs lastID " + sharedPref.getInt("lastID", 0));
+        Log.w(SettingsActivity.TAG, "onCreate: loading sharedPrefs lastIDString " + sharedPref.getString("lastIDString", ScannerPaths.power_supply));
 
         chbAutostartService.setChecked(sharedPref.getBoolean("serviceAutoStart", false));
         intervalET.setText(String.valueOf(sharedPref.getInt("interval", 2)));
@@ -122,7 +122,7 @@ public class SettingsActivity extends AppCompatActivity {
 
             mBatteryManager = new BatteryManager(capacityFiles.getSelectedItem().toString(),statusFiles.getSelectedItem().toString() );
             if (mBatteryManager.isSupport) {
-                Log.i(SettingsActivity.TAG, "onCreate: isSupported");
+                Log.w(SettingsActivity.TAG, "onCreate: isSupported");
                 intent.putExtra("BatteryManager", mBatteryManager);
                 mBatteryManager = null;
                 saveSpinners();
@@ -151,7 +151,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     public void intervalClick(View v) {
         if(!intervalET.getText().toString().equals("0")) {
-            Log.i(SettingsActivity.TAG, "intervalClick: setting interval " + intervalET.getText().toString());
+            Log.w(SettingsActivity.TAG, "intervalClick: setting interval " + intervalET.getText().toString());
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.putInt("interval" , Integer.parseInt(intervalET.getText().toString()));
             editor.apply();
@@ -161,7 +161,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public void cnbAutoStartClick(View v) {
-        Log.i(SettingsActivity.TAG, "cnbAutoStartClick: changedState = " + chbAutostartService.isChecked());
+        Log.w(SettingsActivity.TAG, "cnbAutoStartClick: changedState = " + chbAutostartService.isChecked());
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putBoolean("serviceAutoStart" , chbAutostartService.isChecked());
         editor.apply();

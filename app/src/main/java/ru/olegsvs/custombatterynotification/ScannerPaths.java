@@ -23,7 +23,7 @@ public class ScannerPaths {
             for (int i = 0; i < files.length; ++i) {
                 paths.add(files[i].getAbsolutePath());
             }
-            Log.i(SettingsActivity.TAG, "ScannerPaths: power_supply dirs " + paths.toString());
+            Log.w(SettingsActivity.TAG, "ScannerPaths: power_supply dirs " + paths.toString());
         } else {
             Log.e(SettingsActivity.TAG, "getPathsPowerSupply: isError");
             isError = true;
@@ -41,7 +41,7 @@ public class ScannerPaths {
             for (int i = 0; i < files.length; ++i) {
                 paths.add(files[i].getAbsolutePath());
             }
-            Log.i(SettingsActivity.TAG, "ScannerPaths: entryFiles " + paths.toString());
+            Log.w(SettingsActivity.TAG, "ScannerPaths: entryFiles " + paths.toString());
             return paths;
         }
         return null;

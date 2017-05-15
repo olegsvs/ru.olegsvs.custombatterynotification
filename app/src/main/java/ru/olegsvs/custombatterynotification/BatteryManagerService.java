@@ -93,13 +93,13 @@ public class BatteryManagerService extends Service{
     Runnable runnable = null;
 
     public static boolean isMyServiceRunning() {
-        Log.i(SettingsActivity.TAG, "BatteryManagerService started ? " + IS_STARTED);
+        Log.w(SettingsActivity.TAG, "check BatteryManagerService is running ? " + IS_STARTED);
         return IS_STARTED;
     }
 
     public static void setInterval(int interval) {
         BatteryManagerService.interval = interval * 1000;
-        Log.i(SettingsActivity.TAG, "BatteryManagerService setInterval: " + BatteryManagerService.interval);
+        Log.w(SettingsActivity.TAG, "BatteryManagerService setInterval: " + BatteryManagerService.interval);
     }
 
     @Override
@@ -112,7 +112,7 @@ public class BatteryManagerService extends Service{
         mBatteryManager = null;
         if(myHandler != null)
         myHandler.removeCallbacks(runnable);
-        Log.i(SettingsActivity.TAG, "BatteryManagerService onDestroy: BatteryManagerService destroy!");
+        Log.w(SettingsActivity.TAG, "BatteryManagerService onDestroy: BatteryManagerService destroy!");
     }
 
     @Nullable
@@ -124,25 +124,22 @@ public class BatteryManagerService extends Service{
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         SharedPreferences sharedPref = getSharedPreferences("Settings", Context.MODE_PRIVATE);
-        Log.i(SettingsActivity.TAG, "onStartCommand: BatteryManagerService start");
-        try {
-            mBatteryManager = intent.getParcelableExtra("BatteryManager");
-        } catch (Exception e) { Log.e(SettingsActivity.TAG, "onStartCommand: getParcelableExtra " + e); }
-
+        Log.w(SettingsActivity.TAG, "onStartCommand: BatteryManagerService start");
+        if(intent != null) mBatteryManager = intent.getParcelableExtra("BatteryManager");
             if(mBatteryManager == null) {
                 String lastTypeBattery = sharedPref.getString("lastTypeBattery", "null");
                 String lastStateBattery = sharedPref.getString("lastStateBattery", "null");
                 mBatteryManager = new BatteryManager(lastTypeBattery, lastStateBattery);
             }
             if(mBatteryManager.isSupport) {
-                Log.i(SettingsActivity.TAG, "BatteryManagerService onStartCommand:  " + mBatteryManager.isSupport);
+                Log.w(SettingsActivity.TAG, "BatteryManagerService onStartCommand: mBatteryManager.isSupport = " + mBatteryManager.isSupport);
 
                  mNotificationManager =
                         (NotificationManager) getSystemService(Service.NOTIFICATION_SERVICE);
                 interval = 1000 * sharedPref.getInt("interval", 2);
-                Log.i(SettingsActivity.TAG, "onStartCommand: load interval = " + interval);
+                Log.w(SettingsActivity.TAG, "onStartCommand: load interval = " + interval);
                 createNotify();
-                Log.i(SettingsActivity.TAG, "onStartCommand: create and show notification");
+                Log.w(SettingsActivity.TAG, "onStartCommand: create and show notification");
                 return super.onStartCommand(intent, flags, startId);
             } else stopSelf();
         return super.onStartCommand(intent, flags, startId);
@@ -196,8 +193,8 @@ public class BatteryManagerService extends Service{
             mNotificationManager.notify(NOTIFICATION_CUSTOM_BATTERY, mBuilder.build());
 
             myHandler = new Handler();
-            Log.i(SettingsActivity.TAG, "handler started");
-            Log.i(SettingsActivity.TAG, "state : " + getResults());
+            Log.w(SettingsActivity.TAG, "handler started");
+            Log.w(SettingsActivity.TAG, "state : " + getResults());
             runnable = new Runnable(){
 
                 @Override
@@ -224,6 +221,6 @@ public class BatteryManagerService extends Service{
     public void onCreate() {
         super.onCreate();
         IS_STARTED = true;
-        Log.i(SettingsActivity.TAG, "BatteryManagerService onCreate: creating BatteryManagerService, IS_STARTED = " + IS_STARTED);
+        Log.w(SettingsActivity.TAG, "BatteryManagerService onCreate: creating BatteryManagerService");
     }
 }
