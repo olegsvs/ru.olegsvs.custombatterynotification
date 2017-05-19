@@ -10,6 +10,6 @@ On most Android-smartphones this way
 Initially, the program was written under the Innos D6000 (device with external and internal batteries (Dock Battery)), on custom firmware, the charge of the external battery was not displayed in the status bar. The application allowed to indicate by hand the path to the second battery and display its status in the status bar.
 
 
-![FIRST](https://raw.githubusercontent.com/olegsvs/ru.olegsvs.custombatterynotification/testing/images/2.png)
-![SECOND](https://raw.githubusercontent.com/olegsvs/ru.olegsvs.custombatterynotification/testing/images/3.png)
-![THIRD](https://raw.githubusercontent.com/olegsvs/ru.olegsvs.custombatterynotification/testing/images/1.png)
+![FIRST](https://raw.githubusercontent.com/olegsvs/ru.olegsvs.custombatterynotification/fabric/images/2.png)
+![SECOND](https://raw.githubusercontent.com/olegsvs/ru.olegsvs.custombatterynotification/fabric/images/3.png)
+![THIRD](https://raw.githubusercontent.com/olegsvs/ru.olegsvs.custombatterynotification/fabric/images/1.png)
