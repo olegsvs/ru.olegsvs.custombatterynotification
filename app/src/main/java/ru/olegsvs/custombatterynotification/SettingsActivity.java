@@ -7,6 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -30,6 +32,34 @@ public class SettingsActivity extends AppCompatActivity {
     public SharedPreferences sharedPref;
     public Button intervalSetBTN;
     public EditText intervalET;
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.i(SettingsActivity.TAG, "onDestroy: Activity");
+        Window w = getWindow();
+        if (w != null) {
+            View v = w.getDecorView();
+            if (v != null) {
+                unbindDrawables(v);
+            }
+        }
+        System.gc();
+    }
+
+    private void unbindDrawables(View view) {
+        if (view.getBackground() != null) {
+            view.getBackground().setCallback(null);
+        }
+        if (view instanceof ViewGroup) {
+            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+                unbindDrawables(((ViewGroup) view).getChildAt(i));
+            }
+            if (!(view instanceof AdapterView<?>))
+                ((ViewGroup) view).removeAllViews();
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
