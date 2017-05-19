@@ -51,11 +51,11 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public void setupSpinners() {
-        if(!ScannerPaths.checkPaths()) {
+        if(!ScannerPaths.INSTANCE.checkPaths()) {
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                    android.R.layout.simple_spinner_item, ScannerPaths.getPathsPowerSupply());
+                    android.R.layout.simple_spinner_item, ScannerPaths.INSTANCE.getPathsPowerSupply());
             spinnerBatteries.setAdapter(adapter);
-        } else Toast.makeText(this,ScannerPaths.power_supply + " directory not found",Toast.LENGTH_LONG).show();
+        } else Toast.makeText(this, ScannerPaths.INSTANCE.getPower_supply() + " directory not found",Toast.LENGTH_LONG).show();
 
         spinnerBatteries.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -92,7 +92,7 @@ public class SettingsActivity extends AppCompatActivity {
         Log.w(SettingsActivity.TAG, "onCreate: loading sharedPrefs capacityFiles " + sharedPref.getInt("capacityFiles", 0));
         Log.w(SettingsActivity.TAG, "onCreate: loading sharedPrefs statusFiles " + sharedPref.getInt("statusFiles", 0));
         Log.w(SettingsActivity.TAG, "onCreate: loading sharedPrefs lastID " + sharedPref.getInt("lastID", 0));
-        Log.w(SettingsActivity.TAG, "onCreate: loading sharedPrefs lastIDString " + sharedPref.getString("lastIDString", ScannerPaths.power_supply));
+        Log.w(SettingsActivity.TAG, "onCreate: loading sharedPrefs lastIDString " + sharedPref.getString("lastIDString", ScannerPaths.INSTANCE.getPower_supply()));
 
         chbAutostartService.setChecked(sharedPref.getBoolean("serviceAutoStart", false));
         intervalET.setText(String.valueOf(sharedPref.getInt("interval", 2)));
@@ -101,9 +101,9 @@ public class SettingsActivity extends AppCompatActivity {
 
     public void loadPathsEntry() {
         ArrayAdapter<String> adapterCapacity = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, ScannerPaths.getPathsEntryOfPowerSupply(spinnerBatteries.getSelectedItem().toString()));
+                android.R.layout.simple_spinner_item, ScannerPaths.INSTANCE.getPathsEntryOfPowerSupply(spinnerBatteries.getSelectedItem().toString()));
         ArrayAdapter<String> adapterStatus = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, ScannerPaths.getPathsEntryOfPowerSupply(spinnerBatteries.getSelectedItem().toString()));
+                android.R.layout.simple_spinner_item, ScannerPaths.INSTANCE.getPathsEntryOfPowerSupply(spinnerBatteries.getSelectedItem().toString()));
         if((capacityFiles.getAdapter() == null) && (statusFiles.getAdapter() == null)) {
             capacityFiles.setAdapter(adapterCapacity);
             statusFiles.setAdapter(adapterStatus);
@@ -121,12 +121,12 @@ public class SettingsActivity extends AppCompatActivity {
             stopService(intent);
 
             mBatteryManager = new BatteryManager(capacityFiles.getSelectedItem().toString(),statusFiles.getSelectedItem().toString() );
-            if (mBatteryManager.isSupport) {
+            if (mBatteryManager.getIsSupport()) {
                 Log.w(SettingsActivity.TAG, "onCreate: isSupported");
                 intent.putExtra("BatteryManager", mBatteryManager);
                 mBatteryManager = null;
                 saveSpinners();
-                if(BatteryManagerService.isMyServiceRunning()) {
+                if(BatteryManagerService.Companion.isMyServiceRunning()) {
                     stopService(intent);
                     startService(intent);
                 } else startService(intent);
@@ -156,7 +156,7 @@ public class SettingsActivity extends AppCompatActivity {
             editor.putInt("interval" , Integer.parseInt(intervalET.getText().toString()));
             editor.apply();
             editor.commit();
-            BatteryManagerService.setInterval(Integer.parseInt(intervalET.getText().toString()));
+            BatteryManagerService.Companion.setInterval(Integer.parseInt(intervalET.getText().toString()));
         } else Toast.makeText(getApplicationContext(),getString(R.string.intervalWarning),Toast.LENGTH_LONG).show();
     }
 
@@ -169,7 +169,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public void dismissNotifyClick(View view) {
-        if(BatteryManagerService.isMyServiceRunning()) {
+        if(BatteryManagerService.Companion.isMyServiceRunning()) {
             mBatteryManager = null;
             Intent intent = new Intent(getApplicationContext(), BatteryManagerService.class);
             stopService(intent);
