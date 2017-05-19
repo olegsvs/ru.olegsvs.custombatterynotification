@@ -47,7 +47,7 @@ object ScannerPaths {
         return null
     }
 
-    internal fun checkPaths(): Boolean {
+    fun checkPaths(): Boolean {
         pathsPowerSupply
         return isError
     }

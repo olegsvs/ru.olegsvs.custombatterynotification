@@ -33,7 +33,7 @@ object OneLineReader {
 
     fun getValue(_f: File): String {
 
-        var readedValue: String? = null
+        var readedValue: String = ""
 
         try {
             val fs = FileInputStream(_f)

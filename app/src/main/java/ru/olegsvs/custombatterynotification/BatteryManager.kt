@@ -44,10 +44,12 @@ class BatteryManager : Parcelable {
         val file = File(capacityBattery)
         if (file.exists()) {
             Log.w(SettingsActivity.TAG, "isSupportCheck:  $capacityBattery exists!")
-            return isSupport = true
+            isSupport = true
+            return isSupport
         }
         Log.w(SettingsActivity.TAG, "isSupportCheck:  $capacityBattery NOT exists!")
-        return isSupport = false
+        isSupport = false
+        return isSupport
     }
 
     val capacity: String
@@ -75,9 +77,7 @@ class BatteryManager : Parcelable {
                 return BatteryManager(`in`)
             }
 
-            override fun newArray(size: Int): Array<BatteryManager> {
-                return arrayOfNulls(size)
-            }
+            override fun newArray(size: Int): Array<out BatteryManager?> = arrayOfNulls(size)
         }
     }
 }

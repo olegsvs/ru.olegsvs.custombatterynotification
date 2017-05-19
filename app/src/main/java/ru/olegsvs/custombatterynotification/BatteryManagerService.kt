@@ -60,8 +60,8 @@ class BatteryManagerService : Service() {
             val lastStateBattery = sharedPref.getString("lastStateBattery", "null")
             mBatteryManager = BatteryManager(lastTypeBattery, lastStateBattery)
         }
-        if (mBatteryManager!!.getIsSupport()) {
-            Log.w(SettingsActivity.TAG, "BatteryManagerService onStartCommand: mBatteryManager.isSupport = " + mBatteryManager!!.getIsSupport())
+        if (true/*mBatteryManager!!.getIsSupport()*/) {
+            Log.w(SettingsActivity.TAG, "BatteryManagerService onStartCommand: mBatteryManager.isSupport = "/* + mBatteryManager.getIsSupport()*/)
 
             mNotificationManager = getSystemService(Service.NOTIFICATION_SERVICE) as NotificationManager
             interval = 1000 * sharedPref.getInt("interval", 2)
@@ -149,7 +149,7 @@ class BatteryManagerService : Service() {
     }
 
     companion object {
-        private var interval = 2000
+        var interval = 2000
 
         private var IS_STARTED = false
 
@@ -159,8 +159,8 @@ class BatteryManagerService : Service() {
                 return IS_STARTED
             }
 
-        fun setInterval(interval: Int) {
-            BatteryManagerService.interval = interval * 1000
+        fun setInterval(/*interval: Int*/) {
+            BatteryManagerService.interval = 5 * 1000
             Log.w(SettingsActivity.TAG, "BatteryManagerService setInterval: " + BatteryManagerService.interval)
         }
     }

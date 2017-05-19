@@ -121,9 +121,9 @@ public class SettingsActivity extends AppCompatActivity {
             stopService(intent);
 
             mBatteryManager = new BatteryManager(capacityFiles.getSelectedItem().toString(),statusFiles.getSelectedItem().toString() );
-            if (mBatteryManager.getIsSupport()) {
+            if (true /*mBatteryManager.getIsSupport()*/) {
                 Log.w(SettingsActivity.TAG, "onCreate: isSupported");
-                intent.putExtra("BatteryManager", mBatteryManager);
+//                intent.putExtra("BatteryManager", mBatteryManager);
                 mBatteryManager = null;
                 saveSpinners();
                 if(BatteryManagerService.Companion.isMyServiceRunning()) {
