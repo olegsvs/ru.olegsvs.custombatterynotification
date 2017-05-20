@@ -106,9 +106,9 @@ public class BatteryManagerService extends Service{
     public void onDestroy() {
         super.onDestroy();
         IS_STARTED = false;
-        if (mNotificationManager == null)
-            mNotificationManager = (NotificationManager)  getSystemService(NOTIFICATION_SERVICE);
+        if (mNotificationManager != null)
         mNotificationManager.cancelAll();
+        mNotificationManager = null;
         mBatteryManager = null;
         if(myHandler != null)
         myHandler.removeCallbacks(runnable);
@@ -134,8 +134,7 @@ public class BatteryManagerService extends Service{
             if(mBatteryManager.isSupport) {
                 Log.w(SettingsActivity.TAG, "BatteryManagerService onStartCommand: mBatteryManager.isSupport = " + mBatteryManager.isSupport);
 
-                 mNotificationManager =
-                        (NotificationManager) getSystemService(Service.NOTIFICATION_SERVICE);
+                mNotificationManager = (NotificationManager) getSystemService(Service.NOTIFICATION_SERVICE);
                 interval = 1000 * sharedPref.getInt("interval", 2);
                 Log.w(SettingsActivity.TAG, "onStartCommand: load interval = " + interval);
                 createNotify();
@@ -152,7 +151,7 @@ public class BatteryManagerService extends Service{
                 Crashlytics.log("getResults: BAT_CAPACITY index error [0::100]! " + BAT_CAPACITY);
                 Log.e(SettingsActivity.TAG, "getResults: BAT_CAPACITY index error [0::100]! " + BAT_CAPACITY);
                 Toast.makeText(getApplicationContext(),"BAT_CAPACITY index error [0::100] = " + BAT_CAPACITY,Toast.LENGTH_LONG).show();
-                                this.mBatteryManager = null;
+                this.mBatteryManager = null;
                 stopSelf();
                 return UNRECOGNIZED_VALUES;
 
@@ -203,13 +202,14 @@ public class BatteryManagerService extends Service{
                         mBuilder.setContentText(getResults());
                         mBuilder.setSmallIcon(iconRes[BAT_CAPACITY]);
                         mNotificationManager.notify(NOTIFICATION_CUSTOM_BATTERY, mBuilder.build());
+                        Runtime.getRuntime().gc();
                         myHandler.postDelayed(runnable, interval);
                     }
                 }
 
             };
 
-            myHandler.postDelayed(runnable, interval);
+            myHandler.post(runnable);
         } catch (Exception e) {
             e.printStackTrace();
             Crashlytics.logException(e);
