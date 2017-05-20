@@ -20,12 +20,10 @@ package ru.olegsvs.custombatterynotification;
 */
 
 
-        import java.io.BufferedReader;
+import java.io.BufferedReader;
         import java.io.File;
         import java.io.FileInputStream;
         import java.io.InputStreamReader;
-
-        import android.util.Log;
 
         import com.crashlytics.android.Crashlytics;
 

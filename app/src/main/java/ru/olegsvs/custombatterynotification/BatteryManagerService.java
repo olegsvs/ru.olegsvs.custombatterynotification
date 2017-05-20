@@ -6,7 +6,6 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.nfc.FormatException;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
@@ -16,8 +15,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
-
-import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by olegsvs on 11.05.2017.
@@ -80,6 +77,7 @@ public class BatteryManagerService extends Service{
     };
     private final int NOTIFICATION_CUSTOM_BATTERY = 444;
     private int BAT_CAPACITY = 0;
+    private int count = 0;
     private static int interval = 2000;
     private final String PERCENT= "%";
     private final String UNRECOGNIZED_VALUES= "Unrecognized values";
@@ -202,7 +200,7 @@ public class BatteryManagerService extends Service{
                         mBuilder.setContentText(getResults());
                         mBuilder.setSmallIcon(iconRes[BAT_CAPACITY]);
                         mNotificationManager.notify(NOTIFICATION_CUSTOM_BATTERY, mBuilder.build());
-                        Runtime.getRuntime().gc();
+                        if(++count%20 == 0) Runtime.getRuntime().gc();
                         myHandler.postDelayed(runnable, interval);
                     }
                 }

@@ -16,8 +16,8 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
-import com.crashlytics.android.Crashlytics;
 
+import com.crashlytics.android.Crashlytics;
 import io.fabric.sdk.android.Fabric;
 
 public class SettingsActivity extends AppCompatActivity {
