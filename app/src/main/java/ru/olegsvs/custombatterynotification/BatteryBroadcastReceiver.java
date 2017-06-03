@@ -18,7 +18,7 @@ public class BatteryBroadcastReceiver extends BroadcastReceiver {
             if(sharedPref.getBoolean("serviceAutoStart", false)) {
                 Intent myIntent = new Intent(context, BatteryManagerService.class);
                 context.startService(myIntent);
-                Log.w(SettingsActivity.TAG, "BatteryBroadcastReceiver: BatteryBroadcastReceiver exec");
+                Log.w(SettingsActivity.TAG, "BatteryBroadcastReceiver: BatteryBroadcastReceiver onReceive exec");
             } else {
                 Log.w(SettingsActivity.TAG, "BatteryBroadcastReceiver: autostart service is disabled");
             }
