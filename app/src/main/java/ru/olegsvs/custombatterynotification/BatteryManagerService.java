@@ -21,7 +21,7 @@ import com.crashlytics.android.Crashlytics;
  */
 
 public class BatteryManagerService extends Service{
-    private int iconRes[] = {
+    private int iconRes[] = { //battery capacity drawables
             R.drawable.battery_green_0,R.drawable.battery_green_1,
             R.drawable.battery_green_2,R.drawable.battery_green_3,
             R.drawable.battery_green_4,R.drawable.battery_green_5,
@@ -75,14 +75,14 @@ public class BatteryManagerService extends Service{
             R.drawable.battery_green_100
 
     };
-    private final int NOTIFICATION_CUSTOM_BATTERY = 444;
-    private int BAT_CAPACITY = 0;
-    private int count = 0;
-    private static int interval = 2000;
+    private final int NOTIFICATION_CUSTOM_BATTERY = 444; //id notify
+    private int BAT_CAPACITY = 0; //default capacty value
+    private int count = 0; //value for a call System.gc() every 20 tacts(interval)
+    private static int interval = 2000; //default interval value
     private final String PERCENT= "%";
     private final String UNRECOGNIZED_VALUES= "Unrecognized values";
 
-    private static boolean IS_STARTED = false;
+    private static boolean IS_STARTED = false; //isMyServiceRunning value
 
     private NotificationCompat.Builder mBuilder = null;
     Handler myHandler = null;
@@ -90,12 +90,12 @@ public class BatteryManagerService extends Service{
     BatteryManager mBatteryManager = null;
     Runnable runnable = null;
 
-    public static boolean isMyServiceRunning() {
+    public static boolean isMyServiceRunning() { //check is service is started
         Log.w(SettingsActivity.TAG, "check BatteryManagerService is running ? " + IS_STARTED);
         return IS_STARTED;
     }
 
-    public static void setInterval(int interval) {
+    public static void setInterval(int interval) { //setup interval value
         BatteryManagerService.interval = interval * 1000;
         Log.w(SettingsActivity.TAG, "BatteryManagerService setInterval: " + BatteryManagerService.interval);
     }
@@ -105,11 +105,11 @@ public class BatteryManagerService extends Service{
         super.onDestroy();
         IS_STARTED = false;
         if (mNotificationManager != null)
-        mNotificationManager.cancelAll();
+        mNotificationManager.cancelAll(); //cancel my notify
         mNotificationManager = null;
         mBatteryManager = null;
         if(myHandler != null)
-        myHandler.removeCallbacks(runnable);
+        myHandler.removeCallbacks(runnable); //stop handler tacts
         Log.w(SettingsActivity.TAG, "BatteryManagerService onDestroy: BatteryManagerService destroy!");
     }
 
@@ -121,45 +121,45 @@ public class BatteryManagerService extends Service{
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        SharedPreferences sharedPref = getSharedPreferences("Settings", Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = getSharedPreferences("Settings", Context.MODE_PRIVATE); //get prefs
         Log.w(SettingsActivity.TAG, "onStartCommand: BatteryManagerService start");
-        if(intent != null) mBatteryManager = intent.getParcelableExtra("BatteryManager");
+        if(intent != null) mBatteryManager = intent.getParcelableExtra("BatteryManager"); //if starting service service without parcel intent
             if(mBatteryManager == null) {
-                String lastTypeBattery = sharedPref.getString("lastTypeBattery", "null");
+                String lastTypeBattery = sharedPref.getString("lastTypeBattery", "null"); //load last values from prefs
                 String lastStateBattery = sharedPref.getString("lastStateBattery", "null");
-                mBatteryManager = new BatteryManager(lastTypeBattery, lastStateBattery);
+                mBatteryManager = new BatteryManager(lastTypeBattery, lastStateBattery); //constructor
             }
-            if(mBatteryManager.isSupport) {
+            if(mBatteryManager.isSupport) { //is support for paths
                 Log.w(SettingsActivity.TAG, "BatteryManagerService onStartCommand: mBatteryManager.isSupport = " + mBatteryManager.isSupport);
 
                 mNotificationManager = (NotificationManager) getSystemService(Service.NOTIFICATION_SERVICE);
-                interval = 1000 * sharedPref.getInt("interval", 2);
+                interval = 1000 * sharedPref.getInt("interval", 2); //load interval from prefs
                 Log.w(SettingsActivity.TAG, "onStartCommand: load interval = " + interval);
                 createNotify();
                 Log.w(SettingsActivity.TAG, "onStartCommand: create and show notification");
                 return super.onStartCommand(intent, flags, startId);
-            } else stopSelf();
+            } else stopSelf(); //if not support
         return super.onStartCommand(intent, flags, startId);
     }
 
     private String getResults() {
         try{
-        BAT_CAPACITY = Integer.parseInt(this.mBatteryManager.getCapacity());
-            if(!(BAT_CAPACITY >= 0 && BAT_CAPACITY <= 100)){
+        BAT_CAPACITY = Integer.parseInt(this.mBatteryManager.getCapacity()); //get battery capacity int value
+            if(!(BAT_CAPACITY >= 0 && BAT_CAPACITY <= 100)){ //check correct capacity value 0..100
                 Crashlytics.log("getResults: BAT_CAPACITY index error [0::100]! " + BAT_CAPACITY);
                 Log.e(SettingsActivity.TAG, "getResults: BAT_CAPACITY index error [0::100]! " + BAT_CAPACITY);
                 Toast.makeText(getApplicationContext(),"BAT_CAPACITY index error [0::100] = " + BAT_CAPACITY,Toast.LENGTH_LONG).show();
                 this.mBatteryManager = null;
-                stopSelf();
+                stopSelf(); //stop service if value not correct
                 return UNRECOGNIZED_VALUES;
 
             }
-        return BAT_CAPACITY + PERCENT + this.mBatteryManager.getState(); } catch (Exception e)  {
+        return BAT_CAPACITY + PERCENT + this.mBatteryManager.getState(); } catch (Exception e)  { //return capacity + & + status battery
             Crashlytics.logException(new Throwable("getResults: Unrecognized values! " + e.toString()));
             Log.e(SettingsActivity.TAG, "getResults: Unrecognized values! " + e.toString());
             Toast.makeText(getApplicationContext(),"Unrecognized values! " + e.toString(),Toast.LENGTH_LONG).show();
             this.mBatteryManager = null;
-            stopSelf();
+            stopSelf(); //stop if catch (incorrect values)
             return UNRECOGNIZED_VALUES;
         }
 
@@ -167,17 +167,17 @@ public class BatteryManagerService extends Service{
 
     private void createNotify() {
         try {
-            int color = 0xff123456;
+            int color = 0xff123456; //color for notify icon layer
             mBuilder =
                     new NotificationCompat.Builder(this)
                             .setContentTitle("Battery")
-                            .setStyle(new NotificationCompat.BigTextStyle().bigText(getResults()))
-                            .setOngoing(true)
+                            .setStyle(new NotificationCompat.BigTextStyle().bigText(getResults())) //for max size to shoa all text
+                            .setOngoing(true) //not cancelable userself
                             .setColor(color)
                             .setSmallIcon(iconRes[BAT_CAPACITY])
-                            .setWhen(0)
-                            .setContentText(getResults());
-            Intent resultIntent = new Intent(this, SettingsActivity.class);
+                            .setWhen(0) //not show time on starting notify
+                            .setContentText(getResults()); //show battery values
+            Intent resultIntent = new Intent(this, SettingsActivity.class); //load SettingsActivity on click to notify
             TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
             stackBuilder.addParentStack(SettingsActivity.class);
             stackBuilder.addNextIntent(resultIntent);
@@ -197,10 +197,10 @@ public class BatteryManagerService extends Service{
                 @Override
                 public void run() {
                     if(IS_STARTED) {
-                        mBuilder.setContentText(getResults());
-                        mBuilder.setSmallIcon(iconRes[BAT_CAPACITY]);
+                        mBuilder.setContentText(getResults()); //update battery values
+                        mBuilder.setSmallIcon(iconRes[BAT_CAPACITY]); //setup icon to show battery percent with drawable
                         mNotificationManager.notify(NOTIFICATION_CUSTOM_BATTERY, mBuilder.build());
-                        if(++count%20 == 0) Runtime.getRuntime().gc();
+                        if(++count%20 == 0) Runtime.getRuntime().gc(); //call to gc every 20 tacts
                         myHandler.postDelayed(runnable, interval);
                     }
                 }

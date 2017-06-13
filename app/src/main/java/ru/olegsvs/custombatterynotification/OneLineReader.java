@@ -38,7 +38,7 @@ public class OneLineReader {
             InputStreamReader sr = new InputStreamReader(fs);
             BufferedReader br = new BufferedReader(sr);
 
-            readedValue = br.readLine();
+            readedValue = br.readLine();  //read first line on file
 
             br.close();
             sr.close();

@@ -13,14 +13,14 @@ import android.util.Log;
 public class BatteryBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        if ("android.intent.action.BOOT_COMPLETED".equals(intent.getAction())) {
-            SharedPreferences sharedPref = context.getSharedPreferences("Settings", Context.MODE_PRIVATE);
-            if(sharedPref.getBoolean("serviceAutoStart", false)) {
+        if ("android.intent.action.BOOT_COMPLETED".equals(intent.getAction())) { //check intent with action BOOT_COMPLETED
+            SharedPreferences sharedPref = context.getSharedPreferences("Settings", Context.MODE_PRIVATE); //load prefs to check parameters
+            if(sharedPref.getBoolean("serviceAutoStart", false)) { //if auto start is enabled
                 Intent myIntent = new Intent(context, BatteryManagerService.class);
-                context.startService(myIntent);
+                context.startService(myIntent); //start service
                 Log.w(SettingsActivity.TAG, "BatteryBroadcastReceiver: onReceive exec");
             } else {
-                Log.w(SettingsActivity.TAG, "BatteryBroadcastReceiver: autostart service is disabled");
+                Log.w(SettingsActivity.TAG, "BatteryBroadcastReceiver: autostart service is disabled"); //if auto start is disabled
             }
         }
     }

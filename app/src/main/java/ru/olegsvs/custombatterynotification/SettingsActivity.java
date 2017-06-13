@@ -21,7 +21,7 @@ import com.crashlytics.android.Crashlytics;
 import io.fabric.sdk.android.Fabric;
 
 public class SettingsActivity extends AppCompatActivity {
-    public static String TAG = SettingsActivity.class.getSimpleName();
+    public static String TAG = SettingsActivity.class.getSimpleName(); //setup TAG
     
     private BatteryManager mBatteryManager = null;
     public Spinner spinnerBatteries;
@@ -63,26 +63,26 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Fabric.with(this, new Crashlytics());
+        Fabric.with(this, new Crashlytics()); //activate fabric.crashlytics
         setContentView(R.layout.activity_settings);
         try {
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true); //setup icon on ActionBar
             getSupportActionBar().setIcon(R.mipmap.ic_launcher);
         } catch (NullPointerException e) {
             Log.e(TAG, "onCreate: setDisplayShowHomeEnabled " +e.toString());
         }
 
-        sharedPref = getSharedPreferences("Settings", Context.MODE_PRIVATE);
+        sharedPref = getSharedPreferences("Settings", Context.MODE_PRIVATE); //get prefs
         Log.i(SettingsActivity.TAG, "onCreate:         setupViews");
-        setupViews();
+        setupViews(); //find views
         Log.i(SettingsActivity.TAG, "onCreate:         setupSpinners");
-        setupSpinners();
+        setupSpinners(); //set spinners values
         Log.i(SettingsActivity.TAG, "onCreate:         loadParams");
-        loadParams();
+        loadParams(); //load values from prefs
     }
 
     public void setupSpinners() {
-        if(!ScannerPaths.checkPaths()) {
+        if(!ScannerPaths.checkPaths()) { //if isError false & directory found 
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                     android.R.layout.simple_spinner_item, ScannerPaths.getPathsPowerSupply());
             spinnerBatteries.setAdapter(adapter);
@@ -93,7 +93,7 @@ public class SettingsActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
 
-            loadPathsEntry();
+            loadPathsEntry(); //load subdirs * subfiles
 
             }
             @Override
@@ -135,12 +135,12 @@ public class SettingsActivity extends AppCompatActivity {
                 android.R.layout.simple_spinner_item, ScannerPaths.getPathsEntryOfPowerSupply(spinnerBatteries.getSelectedItem().toString()));
         ArrayAdapter<String> adapterStatus = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, ScannerPaths.getPathsEntryOfPowerSupply(spinnerBatteries.getSelectedItem().toString()));
-        if((capacityFiles.getAdapter() == null) && (statusFiles.getAdapter() == null)) {
+        if((capacityFiles.getAdapter() == null) && (statusFiles.getAdapter() == null)) { //if first show activity
             capacityFiles.setAdapter(adapterCapacity);
             statusFiles.setAdapter(adapterStatus);
             capacityFiles.setSelection(sharedPref.getInt("capacityFiles", 0));
             statusFiles.setSelection(sharedPref.getInt("statusFiles", 0));
-        } else {
+        } else { //if do select new path
             capacityFiles.setAdapter(adapterCapacity);
             statusFiles.setAdapter(adapterStatus);
         }
@@ -149,15 +149,15 @@ public class SettingsActivity extends AppCompatActivity {
         try {
             mBatteryManager = null;
             Intent intent = new Intent(getApplicationContext(), BatteryManagerService.class);
-            stopService(intent);
+            stopService(intent); //stop always
 
             mBatteryManager = new BatteryManager(capacityFiles.getSelectedItem().toString(),statusFiles.getSelectedItem().toString() );
             if (mBatteryManager.isSupport) {
                 Log.w(SettingsActivity.TAG, "onCreate: isSupported");
-                intent.putExtra("BatteryManager", mBatteryManager);
+                intent.putExtra("BatteryManager", mBatteryManager); //send parcel mBatteryManager to BatteryManagerService
                 mBatteryManager = null;
-                saveSpinners();
-                if(BatteryManagerService.isMyServiceRunning()) {
+                saveSpinners(); //save positions to prefs
+                if(BatteryManagerService.isMyServiceRunning()) { //if running, then reload service
                     stopService(intent);
                     startService(intent);
                 } else startService(intent);
@@ -181,13 +181,13 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public void intervalClick(View v) {
-        if(!intervalET.getText().toString().equals("0")) {
+        if(!intervalET.getText().toString().equals("0")) { //0 is bad interval value
             Log.w(SettingsActivity.TAG, "intervalClick: setting interval " + intervalET.getText().toString());
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.putInt("interval" , Integer.parseInt(intervalET.getText().toString()));
             editor.apply();
-            editor.commit();
-            BatteryManagerService.setInterval(Integer.parseInt(intervalET.getText().toString()));
+            editor.commit(); //save interval value to prefs
+            BatteryManagerService.setInterval(Integer.parseInt(intervalET.getText().toString())); //setup interval on service
         } else Toast.makeText(getApplicationContext(),getString(R.string.intervalWarning),Toast.LENGTH_LONG).show();
     }
 
@@ -196,14 +196,14 @@ public class SettingsActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putBoolean("serviceAutoStart" , chbAutostartService.isChecked());
         editor.apply();
-        editor.commit();
+        editor.commit(); //save auto start value
     }
 
     public void dismissNotifyClick(View view) {
         if(BatteryManagerService.isMyServiceRunning()) {
             mBatteryManager = null;
             Intent intent = new Intent(getApplicationContext(), BatteryManagerService.class);
-            stopService(intent);
+            stopService(intent); //disable service and dismiss notify
         }
     }
 }
